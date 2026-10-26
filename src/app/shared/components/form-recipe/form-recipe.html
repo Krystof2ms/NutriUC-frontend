@@ -1,0 +1,196 @@
+<form [formRoot]="form" class="space-y-6">
+  <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+    <h3 class="font-semibold tracking-tight text-base flex items-center gap-2 space-y-1.5 p-6">
+      <svg lucideUtensilsCrossed class="w-6" />
+      Datos generales
+    </h3>
+    <div class="p-6 pt-0 space-y-5">
+      <div class="field-group">
+        <label for="name">Nombre de la receta</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="Ej. Tostadas de aguacate y huevo"
+          [formField]="form.name"
+        />
+
+        @if (nameError()) {
+          <span class="field-error">{{ nameError() }}</span>
+        }
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div class="field-group">
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="category"
+            >Categoría</label
+          >
+          <select id="category" [formField]="form.category">
+            <option value="" disabled>Selecciona una categoría</option>
+            @for (item of categories(); track $index) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+
+          @if (categoryError()) {
+            <span class="field-error">Seleccione una categoría valida</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="origen">Origen</label>
+          <input type="text" id="origen" placeholder="Ej. Peruana" [formField]="form.origin" />
+
+          @if (originError()) {
+            <span class="field-error">{{ originError() }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label for="description">Descripción</label>
+        <input
+          id="description"
+          type="text"
+          placeholder="Ej. Es una ..."
+          [formField]="form.description"
+        />
+        @if (descriptionError()) {
+          <span class="field-error">{{ descriptionError() }}</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+    <div class="flex flex-row justify-between">
+      <h3 class="font-semibold text-base">🧾 Ingredientes</h3>
+      <button class="btn-add" (click)="addIngredient()">
+        <svg lucidePlus class="w-4" />
+        Añadir
+      </button>
+    </div>
+
+    <fieldset formArrayName="instructions" class="mt-4">
+      @for (field of form.ingredients; track field; let i = $index) {
+        <div class="grid grid-cols-[1fr_1fr_auto] mb-2 gap-3 items-end justify-center">
+          <div class="field-group">
+            <label [for]="'ingredient-name-' + i">Ingrediente</label>
+            <input
+              [id]="'ingredient-name-' + i"
+              type="text"
+              placeholder="Ej. Harina"
+              [formField]="field.name"
+            />
+
+            @if (field.name().invalid() && field.name().touched()) {
+              <span class="field-error">
+                {{ field.name().errors()[0]?.message }}
+              </span>
+            }
+          </div>
+
+          <div class="field-group">
+            <label [for]="'ingredient-quantity-' + i">Cantidad</label>
+            <input
+              [id]="'ingredient-quantity-' + i"
+              type="text"
+              placeholder="Ej. 200 g"
+              [formField]="field.quantity"
+            />
+
+            @if (field.quantity().invalid() && field.quantity().touched()) {
+              <span class="field-error">
+                {{ field.quantity().errors()[0]?.message }}
+              </span>
+            }
+          </div>
+
+          <button
+            class="btn-delete self-center"
+            type="button"
+            (click)="removeIngredient(i)"
+            [disabled]="model().ingredients.length <= 1"
+            aria-label="Eliminar ingrediente"
+          >
+            <svg lucideTrash class="w-4" />
+          </button>
+        </div>
+      }
+    </fieldset>
+  </div>
+
+  <div class="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+    <div class="flex flex-row justify-between">
+      <h3 class="font-semibold text-base flex gap-2">
+        <svg class="w-4" lucideListOrdered />
+        Preparación
+      </h3>
+      <button class="btn-add" (click)="addInstruction()">
+        <svg lucidePlus class="w-4" />
+        Añadir
+      </button>
+    </div>
+
+    <fieldset formArrayName="instructions" class="mt-4 flex flex-col gap-4">
+      @for (field of form.instructions; track field; let i = $index) {
+        <div class="rounded-xl border border-border p-4 space-y-3">
+          <div class="flex items-center gap-3 justify-between">
+            <label
+              class="shrink-0 rounded-lg p-2 bg-primary text-primary-foreground flex items-center justify-center font-bold"
+              [for]="'instruction-' + i"
+            >
+              Paso {{ i + 1 }}
+            </label>
+
+            <button
+              class="btn-delete"
+              type="button"
+              (click)="removeInstruction(i)"
+              [disabled]="model().instructions.length <= 1"
+              aria-label="Eliminar paso"
+            >
+              <svg lucideTrash class="w-4" />
+            </button>
+          </div>
+
+          <textarea
+            class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+            [id]="'instruction-' + i"
+            [formField]="field"
+          >
+          </textarea>
+
+          @if (field().invalid() && field().touched()) {
+            <span class="field-error">
+              {{ field().errors()[0]?.message }}
+            </span>
+          }
+        </div>
+      }
+    </fieldset>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors bg-primary text-primary-foreground hover:bg-primary/80 h-10 px-4 py-2 effect-clicked"
+      type="submit"
+      (click)="onSubmit()"
+    >
+      <!-- [disabled]="!isSubmitDisabled()" -->
+      <svg class="w-6" lucideSave />
+      @if (isSubmitDisabled()) {
+        Guardar cambios
+      } @else {
+        Guardando cambios...
+      }
+    </button>
+    <button
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset- transition-colors bg-accent text-primary hover:bg-accent/80 h-10 px-4 py-2 effect-clicked"
+      type="button"
+    >
+      Cancelar
+    </button>
+  </div>
+</form>

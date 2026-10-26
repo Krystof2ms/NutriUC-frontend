@@ -1,0 +1,44 @@
+@reference "#styles.css";
+
+.input-avatar {
+  @apply block w-full rounded-lg border border-input
+      bg-field text-sm text-foreground
+      file:mr-4 file:cursor-pointer
+      hover:file:bg-accent
+      focus-visible:outline-none
+      focus-visible:ring-2 focus-visible:ring-ring
+      focus-visible:ring-offset-2;
+}
+
+.input-avatar::file-selector-button {
+  @apply border-0 border-r border-input bg-muted px-4 py-2
+      font-medium text-accent-foreground;
+}
+
+.field {
+  @apply flex flex-col gap-2 space-y-2;
+}
+
+.field-label {
+  @apply text-base font-medium;
+}
+
+.field-input {
+  @apply border border-input rounded-lg bg-field px-3 py-2 focus:text-foreground;
+}
+
+.field-input[data-edited] {
+  @apply text-foreground border-secondary;
+}
+
+.field-input:not([data-edited]) {
+  @apply text-muted-foreground;
+}
+
+.field-input[aria-invalid='true'] {
+  @apply border-red-500;
+}
+
+.field-error {
+  @apply text-sm text-red-500;
+}

@@ -1,0 +1,79 @@
+<div class="flex flex-col min-h-screen">
+  <app-header />
+
+  <main class="flex-1 flex items-center justify-center">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-20 bg-primary"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full opacity-10 bg-secondary"></div>
+    </div>
+
+    <section class="relative w-full max-w-md bg-card border-2 border-border-600 rounded-lg p-8">
+      <div class="border-border">
+        <div class="space-y-1 mb-4 bg-card">
+          <h3 class="text-2xl font-bold text-foreground text-center">
+            Bienvenido de vuelta
+          </h3>
+          <p class="text-center text-muted-foreground">
+            Inicia sesión para acceder a tus recetas y planificador
+          </p>
+          <div>
+            @if (error()) {
+            <p class="text-red-500 text-center text-sm mt-1">Error al iniciar sesión</p>
+            }
+
+          </div>
+        </div>
+        <form class="space-y-4 bg-card" [formRoot]="loginForm">
+          <div class="space-y-2 grid">
+            <label for="email" class="mb-0"> Correo electrónico </label>
+            <input
+              class="w-full px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
+              id="email" type="email" placeholder="tu@correo.com" autocomplete="email" [formField]="loginForm.email" />
+            @if (emailError()) {
+            <span class="text-red-500 text-sm mt-1">
+              {{ loginForm.email().errors()[0]?.message }}
+            </span>
+            }
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between mb-0">
+              <label for="password" class="mb-0"> Contraseña </label>
+
+              <a routerLink="/" class="text-xs text-primary hover:underline font-medium">
+                ¿Olvidaste tu contraseña?
+              </a>
+            </div>
+
+            <app-input-password
+              className="w-full px-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
+              [formField]="loginForm.password" id="password" />
+
+            @if (passwordError()) {
+            <span class="text-red-500 text-sm mt-1">
+              {{ loginForm.password().errors()[0]?.message }}
+            </span>
+            }
+          </div>
+
+          <button type="submit"
+            class="w-full hero-gradient text-primary-foreground font-semibold mt-2 rounded-md py-2 effect-clicked hover:brightness-80 transition"
+            [disabled]="isSubmitDisabled()">
+            @if (loginForm().submitting()) {
+            Iniciando sesión...
+            } @else {
+            Iniciar sesión
+            }
+          </button>
+        </form>
+
+        <div class="justify-center pt-0 flex items-center gap-2 mt-6">
+          <p class="text-sm text-muted-foreground">¿No tienes cuenta?</p>
+          <a routerLink="/register" class="text-primary font-semibold hover:underline">
+            Regístrate
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

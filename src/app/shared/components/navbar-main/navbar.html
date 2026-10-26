@@ -1,0 +1,16 @@
+<nav class="bg-card/80 backdrop-blur-lg rounded-2xl border p-1">
+  <ul class="hidden md:flex gap-2">
+    @for (link of links; track link.href) {
+    <li>
+      <a
+        [routerLink]="link.href"
+        routerLinkActive="bg-accent text-foreground"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent"
+      >
+        {{ link.label }}
+      </a>
+    </li>
+    }
+  </ul>
+</nav>

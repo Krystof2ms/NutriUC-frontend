@@ -1,0 +1,60 @@
+<div #container [class.relative]="variant() === 'dropdown'" [class.inline-block]="variant() === 'dropdown'"
+  [class.w-full]="variant() === 'sidebar'">
+  @switch (variant()) {
+  @case ('dropdown') {
+  <button type="button" class="p-2 rounded-md hover:bg-muted" (click)="toggleOpen()" aria-label="Cambiar tema"
+    [attr.aria-expanded]="open()">
+    @let config = themeMap[themeState.theme()];
+    <svg [lucideIcon]="config.icon" class="w-4 h-4"></svg>
+  </button>
+
+  @if (open()) {
+  <div class="absolute right-0 mt-2 w-32 rounded-md border border-border bg-card shadow-lg z-50 overflow-hidden"
+    [class]="animate_enter" [animate.leave]="animate_leave">
+    @for (entry of themes; track entry[0]) {
+    @let theme = entry[0];
+    @let config = entry[1];
+
+    <button type="button" (click)="setTheme(theme)" class="flex items-center gap-2 w-full px-3 py-2 hover:bg-muted">
+      <svg [lucideIcon]="config.icon" class="w-4 h-4"></svg>
+      <span>{{ config.name }}</span>
+    </button>
+    }
+  </div>
+  }
+  }
+
+  @case ('sidebar') {
+  <button type="button" (click)="toggleOpen()"
+    class="flex items-center justify-between w-full px-4 py-2 rounded-md hover:bg-muted transition"
+    [attr.aria-expanded]="open()">
+    <span class="flex items-center gap-3">
+      @let config = themeMap[themeState.theme()];
+      <svg [lucideIcon]="config.icon" class="w-4 h-4"></svg>
+      <span>Tema</span>
+    </span>
+
+    <span class="text-xs text-muted-foreground">
+      {{ config.name }}
+    </span>
+  </button>
+
+  @if (open()) {
+  <div class="mt-1 flex flex-col gap-1 mx-2 px-2 border-l-2 border-border animate-slide-in-250"
+    animate.leave="animate-slide-out-250">
+    @for (entry of themes; track entry[0]) {
+    @let theme = entry[0];
+    @let config = entry[1];
+
+    <button type="button" (click)="setTheme(theme)" class="flex items-center gap-3 px-3 py-2 rounded-md transition"
+      [class.bg-primary/10]="themeState.theme() === theme" [class.text-primary]="themeState.theme() === theme"
+      [class.hover:bg-muted]="themeState.theme() !== theme">
+      <svg [lucideIcon]="config.icon" class="w-4 h-4"></svg>
+      <span>{{ config.name }}</span>
+    </button>
+    }
+  </div>
+  }
+  }
+  }
+</div>

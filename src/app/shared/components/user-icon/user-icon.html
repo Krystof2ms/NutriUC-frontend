@@ -1,0 +1,18 @@
+<div class="relative rounded-full overflow-hidden" [class]="className()">
+  @if (has_image() && !imageError()) {
+    <img
+      class="absolute inset-0 w-full h-full object-cover"
+      [src]="avatarUrl()"
+      [alt]="name()"
+      (error)="imageError.set(true)"
+    />
+  } @else {
+    <span
+      class="absolute inset-0 flex items-center justify-center"
+      [style.background-color]="generateColor(name())"
+    >
+      {{ name()[0] }}
+    </span>
+  }
+</div>
+<!--  -->

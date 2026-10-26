@@ -1,0 +1,17 @@
+@reference "#styles.css";
+
+.info-container {
+  @apply flex flex-col gap-4 mt-4;
+}
+
+.info-item {
+  @apply flex flex-col gap-2;
+}
+
+.info-item span {
+  @apply font-medium text-base;
+}
+
+.info-item p {
+  @apply font-normal text-base p-2 border rounded-xl bg-muted/20 text-muted-foreground;
+}

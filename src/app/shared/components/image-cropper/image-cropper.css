@@ -1,0 +1,13 @@
+cropper-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+cropper-image {
+  max-width: 100%;
+}
+
+cropper-selection {
+  --theme-color: #fff;
+}

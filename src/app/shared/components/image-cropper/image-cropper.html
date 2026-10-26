@@ -1,0 +1,62 @@
+<div class="flex flex-col gap-4">
+  <div class="h-80 w-full overflow-hidden rounded-xl">
+    <cropper-canvas
+      class="h-full w-full"
+      background
+    >
+      <cropper-image
+        [attr.src]="image()"
+        alt="Imagen para recortar"
+        translatable
+        scalable
+        :min-fit="cover"
+        :initial-fit="cover"
+        :min-inset="0"
+        /* :min-inset="auto" zoom */
+      />
+
+      <cropper-selection
+        #selection
+        [attr.aspect-ratio]="aspectRatio()"
+        initial-coverage="0.7"
+        movable
+        resizable
+        outlined
+      >
+        <cropper-handle
+          action="move"
+          plain
+          :min-inset="0"
+          theme-color="rgba(255,255,255,0.35)"
+        />
+
+        <cropper-handle action="n-resize" />
+        <cropper-handle action="e-resize" />
+        <cropper-handle action="s-resize" />
+        <cropper-handle action="w-resize" />
+        <cropper-handle action="ne-resize" />
+        <cropper-handle action="nw-resize" />
+        <cropper-handle action="se-resize" />
+        <cropper-handle action="sw-resize" />
+      </cropper-selection>
+    </cropper-canvas>
+  </div>
+
+  <div class="flex justify-end gap-2">
+    <button
+      type="button"
+      class="rounded-lg border px-4 py-2 transition hover:translate-y-0.5"
+      (click)="cancel()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      type="button"
+      class="rounded-lg bg-primary px-4 py-2 text-primary-foreground transition hover:translate-y-0.5"
+      (click)="crop()"
+    >
+      Recortar
+    </button>
+  </div>
+</div>

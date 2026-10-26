@@ -1,0 +1,42 @@
+@reference "#styles.css";
+
+.field-group {
+  @apply space-y-2 flex flex-col;
+}
+
+.field-group > label {
+  @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+}
+
+.field-group input {
+  @apply flex h-10 w-full rounded-md border-input border-1.5 bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground disabled:opacity-50 md:text-sm;
+}
+
+.field-group select {
+  @apply flex h-10 w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+}
+
+.field-group select option {
+  @apply bg-background text-foreground;
+}
+
+.field-error {
+  @apply text-sm text-red-500;
+}
+
+.btn-add {
+  @apply flex gap-2 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors border-input border-1.5 bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3;
+}
+
+.btn-delete {
+  @apply py-0.5 px-2 text-red-800 rounded-md;
+}
+
+
+.btn-delete:hover {
+  @apply bg-muted text-red-800;
+}
+
+.btn-delete:disabled {
+  @apply text-muted-foreground;
+}

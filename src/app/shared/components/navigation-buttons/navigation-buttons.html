@@ -1,0 +1,8 @@
+<div class="flex justify-center items-center gap-2 mt-10">
+  <button [disabled]="!previous_cursor()" (click)="previous()" class="effect-ripple">
+    <svg lucideArrowBigLeftDash class="text-sm font-medium" />
+  </button>
+  <button [disabled]="!next_cursor()" (click)="next()" class="effect-ripple">
+    <svg lucideArrowBigRightDash class="text-sm font-medium" />
+  </button>
+</div>

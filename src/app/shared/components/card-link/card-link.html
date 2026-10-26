@@ -1,0 +1,21 @@
+<a
+    class="group bg-card rounded-2xl border border-border p-6 flex items-start gap-4 hover:shadow-md hover:border-primary/40 transition-all duration-300 hover:-translate-y-0.5"
+    [routerLink]="href()"
+  >
+
+  <div
+    class="w-12 h-12 shrink-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+    <svg [lucideIcon]="icon()" class="w-12" />
+  </div>
+
+  <div class="flex-1">
+    <h3 class="font-bold text-foreground group-hover:text-primary transition-colors">
+      {{ title() }}
+    </h3>
+    <p class="text-sm text-muted-foreground mt-1">
+      {{ content() }}
+    </p>
+  </div>
+
+  <svg lucideArrowRight class="w-4 text-foreground" />
+</a>

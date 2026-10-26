@@ -1,0 +1,53 @@
+<main>
+  <section class="hero-gradient py-16 px-6">
+    <div class="max-w-6xl mx-auto text-center mb-2">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-primary-foreground mb-3">
+        Recetas saludables
+      </h1>
+
+      <p class="text-primary-foreground/80 text-lg max-w-xl mx-auto">
+        Encuentra recetas fáciles, nutritivas y económicas para tu día a día universitario.
+      </p>
+    </div>
+  </section>
+
+  <app-search-bar categories_type="recipe" href=""></app-search-bar>
+
+  <section class="max-w-6xl mx-auto px-6 py-12 min-h-max">
+    @if (recipes(); as response) {
+      @if (response.success) {
+        @let body = response.data;
+        <p class="text-sm text-muted-foreground mb-6">Total: {{ body.data.length ?? 0 }}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
+          @for (recipe of body.data; track $index) {
+            <app-recipe-card
+              class="animate-delay"
+              animate.enter="animate-slide-in-200"
+              [style]="`--animate-delay: ${100 * ($index + 1)}ms`"
+              [id]="recipe.id"
+              [category]="recipe.category"
+              [name]="recipe.name"
+              [origin]="recipe.origin"
+              [ingredients_count]="recipe.ingredients.length"
+              [has_image]="recipe.has_image"
+            />
+          }
+        </div>
+        <app-navigation-buttons
+          [previous_cursor]="body.previous_cursor"
+          [next_cursor]="body.next_cursor"
+        />
+      } @else {
+        <div class="text-center py-20 flex flex-col items-center justify-center gap-4">
+          <p class="text-5xl mb-4">🔍</p>
+
+          <p class="text-muted-foreground text-lg">No se encontró nada</p>
+        </div>
+      }
+    } @else {
+      <app-recipe-card-skeleton />
+      <app-recipe-card-skeleton />
+      <app-recipe-card-skeleton />
+    }
+  </section>
+</main>

@@ -1,0 +1,73 @@
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+@utility animate-fade-in-* {
+  animation-name: fade-in;
+  animation-timing-function: ease-out;
+  animation-duration: calc(--value(integer, --default(300)) * 1ms);
+}
+
+@utility animate-fade-out-* {
+  animation-name: fade-out;
+  animation-timing-function: ease-in;
+  animation-duration: calc(--value(integer, --default(300)) * 1ms);
+}
+
+@utility animate-slide-in-* {
+  animation-name: slide-in;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+  animation-duration: calc(--value(integer, --default(300)) * 1ms);
+}
+
+@utility animate-slide-out-* {
+  animation-name: slide-out;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+  animation-duration: calc(--value(integer, --default(300)) * 1ms);
+}
+
+@utility animate-delay-* {
+  animation-delay: var(--animate-delay, calc(--value(integer, --default(0)) * 1ms));
+}

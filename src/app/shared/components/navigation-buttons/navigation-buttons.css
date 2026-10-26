@@ -1,0 +1,13 @@
+@reference "#styles.css";
+
+button {
+  @apply rounded-lg px-3 py-2 bg-primary text-primary-foreground;
+}
+
+button:disabled {
+  @apply bg-muted text-muted-foreground;
+}
+
+button:hover {
+  @apply shadow-xl/20;
+}

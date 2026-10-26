@@ -1,0 +1,30 @@
+<main>
+  <app-user-card
+    [id]="user().public_id"
+    [name]="user().name"
+    [email]="user().email"
+    [createAt]="user().created_at"
+    [hasAvatar]="user().has_image"
+  />
+
+  <section class="bg-card mt-8 p-8 rounded-2xl shadow-sm border-2 max-w-2/3">
+    <div class="flex justify-between items-center">
+      <h3 class="flex items-center gap-2 font-bold text-xl"><svg lucideUser /> Datos personales</h3>
+      <a
+        routerLink="edit"
+        class="text-sm border-1.5 border-ring py-2 px-2.5 rounded-xl hover:bg-primary/90 hover:text-primary-foreground effect-clicked"
+        >Editar</a
+      >
+    </div>
+    <div class="info-container">
+      <div class="info-item">
+        <span>Nombre de usuario:</span>
+        <p>{{ user().name }}</p>
+      </div>
+      <div class="info-item">
+        <span>Email:</span>
+        <p>{{ user().email }}</p>
+      </div>
+    </div>
+  </section>
+</main>

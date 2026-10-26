@@ -1,0 +1,43 @@
+<main class="flex flex-col gap-4">
+  @for (section of sections; track $index) {
+    <section>
+      <h2 class="text-lg font-semibold text-foreground mb-4">{{ section.title }}</h2>
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        @for (item of section.items; track $index) {
+          <app-card-link
+            [title]="item.title"
+            [content]="item.desc"
+            [icon]="item.icon"
+            [href]="item.to"
+          />
+        }
+      </div>
+    </section>
+  }
+
+  <section>
+    <h2 class="text-lg font-semibold text-foreground mb-4">Mi perfil</h2>
+
+    <a
+      class="bg-primary/80 rounded-2xl p-6 flex items-center gap-5 hover:shadow-lg transition-all hover:-translate-y-0.5"
+      routerLink="/dashboard/user/perfil"
+    >
+      <div
+        class="w-14 h-14 rounded-full bg-primary-foreground/20 text-primary-foreground flex items-center justify-center"
+      >
+        <svg lucideUser class="w-6" />
+      </div>
+
+      <div class="flex-1">
+        <h3 class="font-bold text-primary-foreground text-lg">Detalles del perfil</h3>
+        <p class="text-sm text-primary-foreground/80">Revisa tus datos, foto y cuenta conectada.</p>
+      </div>
+
+      <svg
+        lucideArrowRight
+        class="h-5 w-5 text-primary-foreground group-hover:translate-x-1 transition-transform"
+      />
+    </a>
+  </section>
+</main>

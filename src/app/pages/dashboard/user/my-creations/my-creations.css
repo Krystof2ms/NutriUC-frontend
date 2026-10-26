@@ -1,0 +1,21 @@
+@reference "#styles.css";
+
+.stat-card {
+  @apply bg-card rounded-2xl border border-border p-5;
+}
+
+.stat-card div {
+  @apply w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3;
+}
+
+.stat-card div svg {
+  @apply w-5;
+}
+
+.stat-card .count {
+  @apply text-2xl font-bold text-foreground;
+}
+
+.stat-card .text {
+  @apply text-sm text-muted-foreground;
+}

@@ -1,0 +1,121 @@
+<main class="mt-1">
+  @if (recipeState(); as response) {
+    @if (response.success) {
+      @let data = response.data;
+      <section class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8">
+        <div class="text-center lg:text-left">
+          <a
+            href="/recetas"
+            class="inline-flex items-center gap-1.5 text-sm text-secondary hover:text-secondary/60 mb-4 transition-colors"
+          >
+            <svg lucideArrowLeft class="w-4" />
+            Volver a recetas
+          </a>
+
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight">
+            {{ data.name }}
+          </h2>
+
+          <div class="mt-4 flex items-center gap-3 justify-center lg:justify-start">
+            <app-user-icon
+              [userId]="data.owner.public_id"
+              [name]="data.owner.name"
+              [has_image]="data.owner.has_image"
+              class="w-10 h-10"
+            />
+
+            <div class="text-sm text-muted-foreground">
+              <span class="block font-medium text-foreground">
+                {{ data.owner.name }}
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-4 text-sm"
+          >
+            <span
+              class="flex items-center gap-1.5 bg-primary py-0.5 px-2 rounded-md text-primary-foreground"
+            >
+              <svg lucideLeaf class="w-4" />
+              {{ data.category }}
+            </span>
+
+            <span
+              class="flex items-center gap-1.5 bg-secondary py-0.5 px-2 rounded-md text-secondary-foreground"
+            >
+              <svg lucideMapPin class="w-4" />
+              {{ data.origin }}
+            </span>
+          </div>
+        </div>
+
+        @if (data.has_image && !imageError()) {
+          <div class="relative w-35 h-35 shrink-0">
+            <img
+              [src]="`/api/v1/recipes/recipe/${data.id}/img`"
+              [alt]="data.name"
+              sizes="140px"
+              class="rounded-2xl object-cover"
+              (error)="onImageError($event)"
+            />
+          </div>
+        }
+      </section>
+
+      <div class="max-w-5xl mx-auto px-6 py-12 grid lg:grid-cols-3 gap-10 md:gap-16">
+        <section class="lg:col-span-1 min-w-0 grid place-items-center">
+          <div class="bg-card rounded-2xl card-shadow p-6 sticky top-24 inline-block">
+            <h2 class="text-lg font-bold text-foreground mb-5 flex items-center gap-2">
+              🧾 Ingredientes
+            </h2>
+            <table class="w-full table-auto border-collapse border-spacing-y-3">
+              <thead>
+                <tr class="border-y border-border">
+                  <th class="font-semibold">Ingrediente</th>
+                  <th class="font-semibold text-right">Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (ingredient of data.ingredients; track $index) {
+                  <tr class="border-y-2 border-border">
+                    <td class="py-2">
+                      {{ ingredient.name }}
+                    </td>
+                    <td class="py-2 text-right whitespace-nowrap break-all">
+                      {{ ingredient.quantity }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="lg:col-span-2 order-1 lg:order-2">
+          <h2 class="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
+            👨‍🍳 Preparación
+          </h2>
+          <div
+            class="space-y-6 overflow-y-auto h-120 scrollbar-thumb-primary scrollbar-track-secondary-foreground"
+          >
+            <ul class="list-upper-roman list-outside space-y-2 pl-6 list-disc">
+              @for (instruction of data.instructions; track $index) {
+                <li class="rounded-2xl p-2 font-bold">
+                  <div>
+                    <h3 class="font-medium text-foreground mb-2">Paso {{ $index + 1 }}</h3>
+                    <p class="text-muted-foreground text-sm font-normal leading-relaxed">
+                      {{ instruction.instruction }}
+                    </p>
+                  </div>
+                </li>
+              }
+            </ul>
+          </div>
+        </section>
+      </div>
+    } @else {
+      <app-error-client title="Error al cargar la receta" href="/recetas" />
+    }
+  }
+</main>
