@@ -1,4 +1,4 @@
-<form [formRoot]="form" class="space-y-6">
+<form [formRoot]="form" class="space-y-6" (submit)="onSubmit()">
   <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
     <h3 class="font-semibold tracking-tight text-base flex items-center gap-2 space-y-1.5 p-6">
       <svg lucideUtensilsCrossed class="w-6" />
@@ -176,7 +176,6 @@
     <button
       class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors bg-primary text-primary-foreground hover:bg-primary/80 h-10 px-4 py-2 effect-clicked"
       type="submit"
-      (click)="onSubmit()"
     >
       <!-- [disabled]="!isSubmitDisabled()" -->
       <svg class="w-6" lucideSave />

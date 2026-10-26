@@ -4,5 +4,15 @@
     <p class="text-muted-foreground mt-1">Actualiza los datos de tu receta publicada.</p>
   </div>
 
-  <app-form-recipe [categories]="categories()"/>
+  @if (recipe(); as response) {
+    @if (response.success) {
+      <app-form-recipe
+        [categories]="categories()"
+        [initState]="response.data"
+        (recipeSubmit)="onSubmit($event)"
+      />
+    } @else {
+      <app-error-client href=".." title="No se pudo recuperar la receta" />
+    }
+  }
 </main>

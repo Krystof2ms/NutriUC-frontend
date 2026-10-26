@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, effect, input, output, signal } from '@angular/core';
 import {
   LucideSave,
   LucideUtensilsCrossed,
@@ -7,11 +7,14 @@ import {
   LucideListOrdered,
 } from '@lucide/angular';
 import {
+  UpdateRealSchema,
   type UpdateRecipe,
   dynamicEnum,
   updateRecipeDefaultSchema,
 } from '@app/shared/schemas/recipe';
 import { form, FormField, FormRoot, validateStandardSchema } from '@angular/forms/signals';
+import { RecipeDTO } from '@app/types/api';
+import { getChanges } from '@app/shared/utils/recipe.util';
 
 type RecipeForm = UpdateRecipe;
 
@@ -31,8 +34,8 @@ type RecipeForm = UpdateRecipe;
 })
 export class FormRecipe {
   readonly categories = input.required<string[]>();
-  readonly initState = input<RecipeForm>();
-  readonly submit = output<RecipeForm>();
+  readonly initState = input<RecipeDTO>();
+  readonly recipeSubmit = output<UpdateRealSchema>();
 
   recipeSchema = computed(() => dynamicEnum(this.categories()));
 
@@ -76,11 +79,20 @@ export class FormRecipe {
   isSubmitDisabled = computed(() => this.form().invalid() || this.form().submitting());
 
   constructor() {
-    const state = this.initState();
+    effect(() => {
+      const state = this.initState();
 
-    if (state !== undefined) {
-      this.model.set(state);
-    }
+      if (state === undefined) return;
+
+      this.model.set({
+        name: state.name,
+        origin: state.origin,
+        category: state.category,
+        description: state.description,
+        ingredients: state.ingredients,
+        instructions: state.instructions.map((i) => i.instruction),
+      });
+    });
   }
 
   addInstruction(): void {
@@ -118,6 +130,20 @@ export class FormRecipe {
       return;
     }
 
-    this.submit.emit(result.data);
+    const instructions = (result.data.instructions ?? []).map((v, i) => ({
+      step: i + 1,
+      instruction: v,
+    }));
+
+    const data = { ...result.data, instructions };
+
+    const initState = this.initState();
+    if (initState) {
+      const changes = getChanges(initState, data);
+
+      if (Object.keys(changes).length === 0) return;
+    }
+
+    this.recipeSubmit.emit(data);
   }
 }

@@ -54,3 +54,9 @@ export function dynamicEnum(categories: string[]) {
 }
 
 export type UpdateRecipe = z.infer<typeof updateRecipeDefaultSchema>;
+export type UpdateRealSchema = Omit<UpdateRecipe, 'instructions'> & {
+  instructions: {
+    step: number;
+    instruction: string;
+  }[];
+};
