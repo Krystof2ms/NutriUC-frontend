@@ -50,7 +50,7 @@ export class FormRecipe {
   readonly categories = input.required<string[]>();
   readonly initState = input<RecipeDTO>();
   readonly recipeSubmit = output<UpdateRealSchema>();
-  readonly recipeImageSubmit = output<Blob>();
+  readonly recipeImageSubmit = output<Blob | null>();
 
   private readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
   recipeSchema = computed(() => dynamicEnum(this.categories()));
@@ -202,6 +202,20 @@ export class FormRecipe {
 
     this.recipeSubmit.emit(data);
 
-    
+    this.onImageSubmit();
+  }
+
+  onImageSubmit() {
+    const imageUrl = this.imageResult();
+    if (!this.initState()?.has_image && !imageUrl) return;
+    if (imageUrl === `${this.apiUrl}/recipes/recipe/${this.initState()?.id}/img`) return;
+
+    const blob = this.imageBlob();
+
+    if (blob) {
+      this.recipeImageSubmit.emit(blob);
+    } else {
+      this.recipeImageSubmit.emit(null);
+    }
   }
 }
