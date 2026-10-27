@@ -60,6 +60,47 @@
           <span class="field-error">{{ descriptionError() }}</span>
         }
       </div>
+
+      <div class="">
+        <label class="mb-4 font-medium" for="image-recipe">Foto de Receta</label>
+        <div class="flex gap-8 items-center">
+          @if (imageResult(); as image) {
+            <img [src]="image" alt="Imagen seleccionada" class="w-50 rounded-md" />
+          }
+
+          <div class="flex flex-col w-fit">
+            <button type="button" class="flex gap-4 w-fit py-2 px-2.5 mb-2 rounded-lg bg-red-800 hover:bg-red-600 hover:-translate-y-0.5 transition effect-clicked">
+              <svg lucideTrash class="" />
+              Eliminar
+            </button>
+            <input
+              #fileInput
+              id="image-recipe"
+              class="input-image"
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+            />
+
+            <span class="text-muted-foreground text-sm"> JPG, PNG o WebP. Máximo 2 MB. </span>
+          </div>
+        </div>
+
+        @if (imageUrl()) {
+          <div class="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
+            <div class="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl">
+              <h3 class="mb-4 text-lg font-semibold">Recortar avatar</h3>
+
+              <app-image-cropper
+                class=""
+                [image]="imageUrl() ?? ''"
+                (cropped)="onCropped($event)"
+                (cancelled)="onCropCancel()"
+              />
+            </div>
+          </div>
+        }
+      </div>
     </div>
   </div>
 

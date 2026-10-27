@@ -1,4 +1,14 @@
-import { Component, computed, effect, input, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {
   LucideSave,
   LucideUtensilsCrossed,
@@ -15,6 +25,8 @@ import {
 import { form, FormField, FormRoot, validateStandardSchema } from '@angular/forms/signals';
 import { RecipeDTO } from '@app/types/api';
 import { getChanges } from '@app/shared/utils/recipe.util';
+import { ImageCropper } from '../image-cropper/image-cropper';
+import { API_URL } from '@app/config/api.config';
 
 type RecipeForm = UpdateRecipe;
 
@@ -27,16 +39,20 @@ type RecipeForm = UpdateRecipe;
     LucideListOrdered,
     FormField,
     FormRoot,
+    ImageCropper,
   ],
   selector: 'app-form-recipe',
   styleUrl: './form-recipe.css',
   templateUrl: './form-recipe.html',
 })
 export class FormRecipe {
+  private readonly apiUrl = inject(API_URL);
   readonly categories = input.required<string[]>();
   readonly initState = input<RecipeDTO>();
   readonly recipeSubmit = output<UpdateRealSchema>();
+  readonly recipeImageSubmit = output<Blob>();
 
+  private readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
   recipeSchema = computed(() => dynamicEnum(this.categories()));
 
   readonly model = signal<RecipeForm>({
@@ -78,11 +94,51 @@ export class FormRecipe {
 
   isSubmitDisabled = computed(() => this.form().invalid() || this.form().submitting());
 
+  imageBlob = signal<Blob | null>(null);
+
+  imageResult = signal<string | null>(null);
+
+  imageUrl = signal<string | null>(null);
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    this.imageUrl.set(URL.createObjectURL(file));
+  }
+
+  onCropped(blob: Blob): void {
+    this.imageBlob.set(blob);
+    this.imageUrl.set(null);
+
+    this.imageResult.set(URL.createObjectURL(blob));
+  }
+
+  onCropCancel() {
+    this.imageUrl.set(null);
+
+    if (!this.imageBlob()) {
+      this.fileInput().nativeElement.value = '';
+    }
+  }
+
+  onImageDelete() {
+    this.imageBlob.set(null);
+    this.imageUrl.set(null);
+    this.imageResult.set(null);
+  }
+
   constructor() {
     effect(() => {
       const state = this.initState();
 
-      if (state === undefined) return;
+      if (!state) return;
+
+      this.imageResult.set(
+        state.has_image ? `${this.apiUrl}/recipes/recipe/${state.id}/img` : null,
+      );
 
       this.model.set({
         name: state.name,
@@ -145,5 +201,7 @@ export class FormRecipe {
     }
 
     this.recipeSubmit.emit(data);
+
+    
   }
 }
