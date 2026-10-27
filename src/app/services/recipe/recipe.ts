@@ -2,9 +2,13 @@ import {
   CursorDirection,
   CursorPageRecipeDTO,
   ErrorResponseMap,
+  MessageResponse,
   RecipeDTO,
   RecipeGetByIdResponses,
   RecipeSearchResponses,
+  RecipeUpdate,
+  RecipeUpdateImageResponses,
+  RecipeUpdateResponses,
 } from '@api/index';
 import { inject, Service } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -14,6 +18,8 @@ import { normalizeApi } from '@app/shared/utils/to-normalize-api';
 
 type GetSearchErrors = ApiError<ErrorResponseMap<RecipeSearchResponses>>;
 type GetRecipeErrors = ApiError<ErrorResponseMap<RecipeGetByIdResponses>>;
+type UpdateRecipeErrors = ApiError<ErrorResponseMap<RecipeUpdateResponses>>;
+type UpdateRecipeImageErrors = ApiError<ErrorResponseMap<RecipeUpdateImageResponses>>;
 
 @Service()
 export class RecipeService {
@@ -61,6 +67,25 @@ export class RecipeService {
   getById(id: string) {
     return normalizeApi<RecipeDTO, GetRecipeErrors>(
       this.http.get<RecipeDTO>(`${this.apiUrl}/recipe/${id}`),
+    );
+  }
+
+  updateRecipe(id: number, data: RecipeUpdate) {
+    return normalizeApi<MessageResponse, UpdateRecipeErrors>(
+      this.http.patch<MessageResponse>(`${this.apiUrl}/recipe/${id}`, data, {
+        withCredentials: true,
+      }),
+    );
+  }
+
+  updateImage(id: number, image: Blob) {
+    const formData = new FormData();
+    formData.append('avatar', image, 'image.webp');
+
+    return normalizeApi<MessageResponse, UpdateRecipeImageErrors>(
+      this.http.put<MessageResponse>(`${this.apiUrl}/recipe/${id}/img`, formData, {
+        withCredentials: true,
+      }),
     );
   }
 }
