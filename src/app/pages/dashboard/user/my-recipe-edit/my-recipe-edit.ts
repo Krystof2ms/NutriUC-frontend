@@ -7,7 +7,8 @@ import { ErrorClient } from '@app/shared/components/error-client/error-client';
 import { FormRecipe } from '@app/shared/components/form-recipe/form-recipe';
 import { UpdateRealSchema } from '@app/shared/schemas/recipe';
 import { getChanges } from '@app/shared/utils/recipe.util';
-import { filter, map, switchMap } from 'rxjs';
+import { filter, firstValueFrom, map, switchMap } from 'rxjs';
+import { boolean } from 'zod';
 
 @Component({
   imports: [FormRecipe, ErrorClient],
@@ -30,11 +31,32 @@ export class MyRecipeEdit {
     ),
   );
 
-  onSubmit(form: UpdateRealSchema) {
+  async onSubmit(form: UpdateRealSchema) {
     const original = this.recipe();
     if (original && original.success) {
       const changes = getChanges(original.data, form);
-      console.log(changes)
+      console.log(changes);
     }
+
+    const recipe = this.recipe();
+    if (!recipe?.success) return;
+
+    const result = await firstValueFrom(this.recipeService.updateRecipe(recipe.data.id, form));
+
+    if (result.success) console.log('datos actualizados');
+  }
+
+  async onSubmitImage(blob: Blob | null) {
+    console.log('update image:', blob);
+
+    const recipe = this.recipe();
+    if (!recipe?.success) return;
+    const id = recipe.data.id;
+
+    const result = await firstValueFrom(
+      blob ? this.recipeService.updateImage(id, blob) : this.recipeService.deleteImage(id),
+    );
+
+    if (result.success) console.log('datos actualizados');
   }
 }

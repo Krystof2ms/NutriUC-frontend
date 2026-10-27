@@ -3,6 +3,7 @@ import {
   CursorPageRecipeDTO,
   ErrorResponseMap,
   MessageResponse,
+  RecipeDeleteImageResponses,
   RecipeDTO,
   RecipeGetByIdResponses,
   RecipeSearchResponses,
@@ -20,6 +21,7 @@ type GetSearchErrors = ApiError<ErrorResponseMap<RecipeSearchResponses>>;
 type GetRecipeErrors = ApiError<ErrorResponseMap<RecipeGetByIdResponses>>;
 type UpdateRecipeErrors = ApiError<ErrorResponseMap<RecipeUpdateResponses>>;
 type UpdateRecipeImageErrors = ApiError<ErrorResponseMap<RecipeUpdateImageResponses>>;
+type DeleteRecipeImageErrors = ApiError<ErrorResponseMap<RecipeDeleteImageResponses>>;
 
 @Service()
 export class RecipeService {
@@ -84,6 +86,14 @@ export class RecipeService {
 
     return normalizeApi<MessageResponse, UpdateRecipeImageErrors>(
       this.http.put<MessageResponse>(`${this.apiUrl}/recipe/${id}/img`, formData, {
+        withCredentials: true,
+      }),
+    );
+  }
+
+  deleteImage(id: number) {
+    return normalizeApi<MessageResponse, DeleteRecipeImageErrors>(
+      this.http.delete<MessageResponse>(`${this.apiUrl}/recipe/${id}/img`, {
         withCredentials: true,
       }),
     );

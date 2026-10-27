@@ -180,6 +180,8 @@ export class FormRecipe {
   }
 
   onSubmit(): void {
+    this.onImageSubmit();
+
     const result = this.recipeSchema().safeParse(this.model());
 
     if (!result.success) {
@@ -201,8 +203,6 @@ export class FormRecipe {
     }
 
     this.recipeSubmit.emit(data);
-
-    this.onImageSubmit();
   }
 
   onImageSubmit() {

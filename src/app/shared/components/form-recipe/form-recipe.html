@@ -69,8 +69,13 @@
           }
 
           <div class="flex flex-col w-fit">
-            <button type="button" class="flex gap-4 w-fit py-2 px-2.5 mb-2 rounded-lg bg-red-800 hover:bg-red-600 hover:-translate-y-0.5 transition effect-clicked">
-              <svg lucideTrash class="" />
+            <button
+              type="button"
+              class="flex gap-2 w-fit py-2 px-2.5 mb-2 rounded-lg bg-red-800 hover:bg-red-600 hover:-translate-y-0.5 transition effect-clicked disabled:bg-muted-foreground"
+              [disabled]="!imageResult()"
+              (click)="onImageDelete()"
+            >
+              <svg lucideTrash class="w-6" />
               Eliminar
             </button>
             <input
