@@ -1,6 +1,8 @@
 import type { components } from '../../schema';
 
-export type MessageResponse = components['schemas']['MessageResponse'];
+export type MessageResponse<T = string> = {
+  message: T;
+};
 
 export interface CursorPage<T> {
   data: T[];

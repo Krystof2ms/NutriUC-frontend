@@ -324,8 +324,8 @@ export interface components {
     schemas: {
         /** Body_updateAvatar_api_v1_recipes_recipe__id__img_put */
         Body_updateAvatar_api_v1_recipes_recipe__id__img_put: {
-            /** Avatar */
-            avatar: string;
+            /** Image */
+            image: string;
         };
         /** Body_updateAvatar_api_v1_users_me_avatar_put */
         Body_updateAvatar_api_v1_users_me_avatar_put: {
@@ -403,6 +403,11 @@ export interface components {
         MessageResponse: {
             /** Message */
             message: string;
+        };
+        /** MessageResponse[int] */
+        MessageResponse_int_: {
+            /** Message */
+            message: number;
         };
         /** RecipeCreate */
         RecipeCreate: {
@@ -1106,7 +1111,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MessageResponse"];
+                    "application/json": components["schemas"]["MessageResponse_int_"];
                 };
             };
             /** @description Recipe not found */
