@@ -13,7 +13,7 @@
         Volver a recetas
       </a>
 
-      <section class="flex flex-col items-center">
+      <section class="flex justify-center gap-4 items-center">
         <div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight">
             {{ data.name }}
@@ -56,7 +56,7 @@
         @if (data.has_image && !imageError()) {
           <div class="relative w-35 h-35 shrink-0">
             <img
-              [src]="`/api/v1/recipes/recipe/${data.id}/img`"
+              [src]="`${apiUrl}/recipes/recipe/${data.id}/img`"
               [alt]="data.name"
               sizes="140px"
               class="rounded-2xl object-cover"
