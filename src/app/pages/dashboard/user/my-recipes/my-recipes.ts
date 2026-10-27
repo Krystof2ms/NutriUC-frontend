@@ -1,22 +1,23 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { NavigationButtons } from '@app/shared/components/navigation-buttons/navigation-buttons';
 import { RecipeCard } from '@app/shared/components/recipe-card/recipe-card';
 import { SearchBar } from '@app/shared/components/search-bar/search-bar';
 import { CursorDirection } from '@app/types/api';
-import { LucideUtensilsCrossed } from '@lucide/angular';
+import { LucidePlus, LucideUtensilsCrossed } from '@lucide/angular';
 import { switchMap } from 'rxjs';
 
 @Component({
-  imports: [SearchBar, RecipeCard, NavigationButtons, LucideUtensilsCrossed],
+  imports: [SearchBar, RecipeCard, NavigationButtons, LucideUtensilsCrossed, LucidePlus],
   selector: 'app-my-recipes',
   styleUrl: './my-recipes.css',
   templateUrl: './my-recipes.html',
 })
 export class MyRecipes {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private recipeService = inject(RecipeService);
 
   readonly queryParams = toSignal(this.route.queryParamMap, {
@@ -54,5 +55,9 @@ export class MyRecipes {
     effect(() => {
       console.log('result:', this.recipes());
     });
+  }
+
+  onCreate() {
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
 }

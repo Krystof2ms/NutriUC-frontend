@@ -60,6 +60,13 @@ export const routes: Routes = [
               import('./pages/dashboard/user/my-recipes/my-recipes').then((c) => c.MyRecipes),
           },
           {
+            path: 'mis-recetas/new',
+            loadComponent: () =>
+              import('./pages/dashboard/user/my-recipe-create/my-recipe-create').then(
+                (c) => c.MyRecipeCreate,
+              ),
+          },
+          {
             path: 'mis-recetas/:id',
             loadComponent: () =>
               import('./pages/dashboard/user/my-recipe/my-recipe').then((c) => c.MyRecipe),

@@ -1,38 +1,46 @@
-<h1 class="text-2xl font-bold text-foreground mb-6">Mis Recetas</h1>
+<main class="relative">
+  <h1 class="text-2xl font-bold text-foreground mb-6">Mis Recetas</h1>
+  @let data = recipes();
 
-@let data = recipes();
+  <app-search-bar categories_type="recipe" />
 
-<app-search-bar categories_type="recipe" />
+  @if (data.success) {
+    @let recipes = data.data;
+    <section class="flex flex-col mt-8">
+      <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
+        @for (recipe of recipes.data; track $index) {
+          <app-recipe-card
+            class="animate-delay"
+            animate.enter="animate-slide-in-200"
+            [style]="`--animate-delay: ${100 * ($index + 1)}ms`"
+            [id]="recipe.id"
+            [category]="recipe.category"
+            [name]="recipe.name"
+            [origin]="recipe.origin"
+            [ingredients_count]="recipe.ingredients.length"
+            [has_image]="recipe.has_image"
+            href="/dashboard/user/mis-recetas"
+          />
+        }
+      </div>
 
-@if (data.success) {
-  @let recipes = data.data;
-  <section class="flex flex-col mt-8">
-    <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
-      @for (recipe of recipes.data; track $index) {
-            <app-recipe-card
-              class="animate-delay"
-              animate.enter="animate-slide-in-200"
-              [style]="`--animate-delay: ${100 * ($index + 1)}ms`"
-              [id]="recipe.id"
-              [category]="recipe.category"
-              [name]="recipe.name"
-              [origin]="recipe.origin"
-              [ingredients_count]="recipe.ingredients.length"
-              [has_image]="recipe.has_image"
-              href="/dashboard/user/mis-recetas"
-            />
-          }
-    </div>
+      <app-navigation-buttons
+        [previous_cursor]="recipes.previous_cursor"
+        [next_cursor]="recipes.next_cursor"
+      />
+    </section>
+  } @else {
+    <section class="bg-card rounded-2xl card-shadow p-8 flex flex-col items-center mt-8">
+      <svg class="w-8" lucideUtensilsCrossed />
+      <p class="text-muted-foreground">Aún no tienes recetas guardadas.</p>
+      <p class="text-sm text-muted-foreground mt-1">Explora el catálogo y guarda tus favoritas.</p>
+    </section>
+  }
 
-    <app-navigation-buttons
-      [previous_cursor]="recipes.previous_cursor"
-      [next_cursor]="recipes.next_cursor"
-    />
-  </section>
-} @else {
-  <section class="bg-card rounded-2xl card-shadow p-8 flex flex-col items-center mt-8">
-    <svg class="w-8" lucideUtensilsCrossed />
-    <p class="text-muted-foreground">Aún no tienes recetas guardadas.</p>
-    <p class="text-sm text-muted-foreground mt-1">Explora el catálogo y guarda tus favoritas.</p>
-  </section>
-}
+  <button
+    class="bg-primary p-4 rounded-full absolute bottom-0 right-0 hover:bg-primary/40 transition hover:-translate-2 effect-clicked"
+    (click)="onCreate()"
+  >
+    <svg class="w-6" lucidePlus />
+  </button>
+</main>
