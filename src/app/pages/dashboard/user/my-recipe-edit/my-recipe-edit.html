@@ -18,7 +18,6 @@
         [categories]="categories()"
         [initState]="response.data"
         (recipeSubmit)="onSubmit($event)"
-        (recipeImageSubmit)="onSubmitImage($event)"
       />
     } @else {
       <app-error-client href=".." title="No se pudo recuperar la receta" />

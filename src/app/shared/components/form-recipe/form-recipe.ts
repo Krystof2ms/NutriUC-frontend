@@ -28,6 +28,11 @@ import { getChanges } from '@app/shared/utils/recipe.util';
 import { ImageCropper } from '../image-cropper/image-cropper';
 import { API_URL } from '@app/config/api.config';
 
+export interface RecipeSubmit {
+  recipe?: UpdateRealSchema;
+  image?: Blob | null;
+}
+
 type RecipeForm = UpdateRecipe;
 
 @Component({
@@ -49,8 +54,7 @@ export class FormRecipe {
   private readonly apiUrl = inject(API_URL);
   readonly categories = input.required<string[]>();
   readonly initState = input<RecipeDTO>();
-  readonly recipeSubmit = output<UpdateRealSchema>();
-  readonly recipeImageSubmit = output<Blob | null>();
+  readonly recipeSubmit = output<RecipeSubmit>();
 
   private readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
   recipeSchema = computed(() => dynamicEnum(this.categories()));
@@ -179,7 +183,7 @@ export class FormRecipe {
     }));
   }
 
-  onSubmit(): void {
+  onSubmitData() {
     this.onImageSubmit();
 
     const result = this.recipeSchema().safeParse(this.model());
@@ -202,7 +206,7 @@ export class FormRecipe {
       if (Object.keys(changes).length === 0) return;
     }
 
-    this.recipeSubmit.emit(data);
+    return data;
   }
 
   onImageSubmit() {
@@ -213,9 +217,19 @@ export class FormRecipe {
     const blob = this.imageBlob();
 
     if (blob) {
-      this.recipeImageSubmit.emit(blob);
+      return blob;
     } else {
-      this.recipeImageSubmit.emit(null);
+      return null;
     }
+  }
+
+  onSubmit() {
+    const recipe = this.onSubmitData();
+    const image = this.onImageSubmit();
+
+    this.recipeSubmit.emit({
+      recipe,
+      image,
+    });
   }
 }

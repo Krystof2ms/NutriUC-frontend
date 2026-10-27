@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoryService } from '@app/services/category/category';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { ErrorClient } from '@app/shared/components/error-client/error-client';
-import { FormRecipe } from '@app/shared/components/form-recipe/form-recipe';
-import { UpdateRealSchema } from '@app/shared/schemas/recipe';
+import { FormRecipe, type RecipeSubmit } from '@app/shared/components/form-recipe/form-recipe';
 import { getChanges } from '@app/shared/utils/recipe.util';
 import { LucideArrowLeft } from '@lucide/angular';
 import { filter, firstValueFrom, map, switchMap } from 'rxjs';
@@ -18,6 +17,7 @@ import { filter, firstValueFrom, map, switchMap } from 'rxjs';
 })
 export class MyRecipeEdit {
   private readonly route = inject(ActivatedRoute);
+  private router = inject(Router);
   private recipeService = inject(RecipeService);
   private categoryService = inject(CategoryService);
 
@@ -31,32 +31,40 @@ export class MyRecipeEdit {
     ),
   );
 
-  async onSubmit(form: UpdateRealSchema) {
-    const original = this.recipe();
-    if (original && original.success) {
-      const changes = getChanges(original.data, form);
-      console.log(changes);
-    }
-
-    const recipe = this.recipe();
-    if (!recipe?.success) return;
-
-    const result = await firstValueFrom(this.recipeService.updateRecipe(recipe.data.id, form));
-
-    if (result.success) console.log('datos actualizados');
-  }
-
-  async onSubmitImage(blob: Blob | null) {
-    console.log('update image:', blob);
-
+  async onSubmit(form: RecipeSubmit) {
     const recipe = this.recipe();
     if (!recipe?.success) return;
     const id = recipe.data.id;
 
-    const result = await firstValueFrom(
-      blob ? this.recipeService.updateImage(id, blob) : this.recipeService.deleteImage(id),
-    );
+    try {
+      const tasks = [];
 
-    if (result.success) console.log('datos actualizados');
+      const original = this.recipe();
+      if (original && original.success && form.recipe) {
+        const changes = getChanges(original.data, form.recipe);
+        if (Object.keys(changes).length > 0) {
+          tasks.push(firstValueFrom(this.recipeService.updateRecipe(id, changes)));
+        }
+      }
+
+      const imageBlob = form.image;
+
+      if (imageBlob !== undefined) {
+        tasks.push(
+          firstValueFrom(
+            imageBlob
+              ? this.recipeService.updateImage(id, imageBlob)
+              : this.recipeService.deleteImage(id),
+          ),
+        );
+      }
+
+      if (tasks.length > 0) {
+        const results = await Promise.allSettled(tasks);
+
+        console.log(results);
+        this.router.navigate(['..'], { relativeTo: this.route });
+      }
+    } catch {}
   }
 }
