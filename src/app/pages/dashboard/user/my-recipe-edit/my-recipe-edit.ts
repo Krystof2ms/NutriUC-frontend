@@ -1,17 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CategoryService } from '@app/services/category/category';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { ErrorClient } from '@app/shared/components/error-client/error-client';
 import { FormRecipe } from '@app/shared/components/form-recipe/form-recipe';
 import { UpdateRealSchema } from '@app/shared/schemas/recipe';
 import { getChanges } from '@app/shared/utils/recipe.util';
+import { LucideArrowLeft } from '@lucide/angular';
 import { filter, firstValueFrom, map, switchMap } from 'rxjs';
-import { boolean } from 'zod';
 
 @Component({
-  imports: [FormRecipe, ErrorClient],
+  imports: [RouterLink, FormRecipe, LucideArrowLeft, ErrorClient],
   selector: 'app-my-recipe-edit',
   styleUrl: './my-recipe-edit.css',
   templateUrl: './my-recipe-edit.html',
