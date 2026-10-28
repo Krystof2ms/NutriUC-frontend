@@ -1,0 +1,16 @@
+<main>
+  <a
+    routerLink=".."
+    class="inline-flex items-center gap-1.5 text-sm text-secondary hover:text-secondary/60 mb-4 transition-colors"
+  >
+    <svg lucideArrowLeft class="w-4" />
+    Volver a recetas
+  </a>
+
+  <div class="mb-4">
+    <h1 class="text-2xl font-bold text-foreground">Crear receta</h1>
+    <p class="text-muted-foreground mt-1">Comparte tu nueva receta.</p>
+  </div>
+
+  <app-form-recipe [categories]="categories()" (recipeSubmit)="onSubmit($event)" />
+</main>

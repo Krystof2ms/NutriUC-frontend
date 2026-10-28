@@ -34,7 +34,7 @@ export class MyCreations {
       title: 'Crear una receta',
       desc: 'Comparte una nueva receta saludable.',
       icon: LucideCirclePlus,
-      to: `${this.basePathname}/mis-recetas/nuevo`,
+      to: `${this.basePathname}/mis-recetas/new`,
     },
     {
       title: 'Ver mis tips',

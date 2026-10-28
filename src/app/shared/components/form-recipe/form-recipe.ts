@@ -1,4 +1,14 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {
   LucideSave,
   LucideUtensilsCrossed,
@@ -7,11 +17,21 @@ import {
   LucideListOrdered,
 } from '@lucide/angular';
 import {
+  UpdateRealSchema,
   type UpdateRecipe,
   dynamicEnum,
   updateRecipeDefaultSchema,
 } from '@app/shared/schemas/recipe';
 import { form, FormField, FormRoot, validateStandardSchema } from '@angular/forms/signals';
+import { RecipeDTO } from '@app/types/api';
+import { getChanges } from '@app/shared/utils/recipe.util';
+import { ImageCropper } from '../image-cropper/image-cropper';
+import { API_URL } from '@app/config/api.config';
+
+export interface RecipeSubmit {
+  recipe?: UpdateRealSchema;
+  image?: Blob | null;
+}
 
 type RecipeForm = UpdateRecipe;
 
@@ -24,16 +44,19 @@ type RecipeForm = UpdateRecipe;
     LucideListOrdered,
     FormField,
     FormRoot,
+    ImageCropper,
   ],
   selector: 'app-form-recipe',
   styleUrl: './form-recipe.css',
   templateUrl: './form-recipe.html',
 })
 export class FormRecipe {
+  private readonly apiUrl = inject(API_URL);
   readonly categories = input.required<string[]>();
-  readonly initState = input<RecipeForm>();
-  readonly submit = output<RecipeForm>();
+  readonly initState = input<RecipeDTO>();
+  readonly recipeSubmit = output<RecipeSubmit>();
 
+  private readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
   recipeSchema = computed(() => dynamicEnum(this.categories()));
 
   readonly model = signal<RecipeForm>({
@@ -75,12 +98,61 @@ export class FormRecipe {
 
   isSubmitDisabled = computed(() => this.form().invalid() || this.form().submitting());
 
-  constructor() {
-    const state = this.initState();
+  imageBlob = signal<Blob | null>(null);
 
-    if (state !== undefined) {
-      this.model.set(state);
+  imageResult = signal<string | null>(null);
+
+  imageUrl = signal<string | null>(null);
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    this.imageUrl.set(URL.createObjectURL(file));
+  }
+
+  onCropped(blob: Blob): void {
+    this.imageBlob.set(blob);
+    this.imageUrl.set(null);
+
+    this.imageResult.set(URL.createObjectURL(blob));
+  }
+
+  onCropCancel() {
+    this.imageUrl.set(null);
+
+    if (!this.imageBlob()) {
+      this.fileInput().nativeElement.value = '';
     }
+  }
+
+  onImageDelete() {
+    this.imageBlob.set(null);
+    this.imageUrl.set(null);
+    this.imageResult.set(null);
+  }
+
+  constructor() {
+    effect(() => {
+      const state = this.initState();
+
+      if (!state) return;
+
+      this.imageResult.set(
+        state.has_image ? `${this.apiUrl}/recipes/recipe/${state.id}/img` : null,
+      );
+
+      this.model.set({
+        name: state.name,
+        origin: state.origin,
+        category: state.category,
+        description: state.description,
+        ingredients: state.ingredients,
+        instructions: state.instructions.map((i) => i.instruction),
+      });
+    });
   }
 
   addInstruction(): void {
@@ -111,13 +183,53 @@ export class FormRecipe {
     }));
   }
 
-  onSubmit(): void {
+  onSubmitData() {
+    this.onImageSubmit();
+
     const result = this.recipeSchema().safeParse(this.model());
 
     if (!result.success) {
       return;
     }
 
-    this.submit.emit(result.data);
+    const instructions = (result.data.instructions ?? []).map((v, i) => ({
+      step: i + 1,
+      instruction: v,
+    }));
+
+    const data = { ...result.data, instructions };
+
+    const initState = this.initState();
+    if (initState) {
+      const changes = getChanges(initState, data);
+
+      if (Object.keys(changes).length === 0) return;
+    }
+
+    return data;
+  }
+
+  onImageSubmit() {
+    const imageUrl = this.imageResult();
+    if (!this.initState()?.has_image && !imageUrl) return;
+    if (imageUrl === `${this.apiUrl}/recipes/recipe/${this.initState()?.id}/img`) return;
+
+    const blob = this.imageBlob();
+
+    if (blob) {
+      return blob;
+    } else {
+      return null;
+    }
+  }
+
+  onSubmit() {
+    const recipe = this.onSubmitData();
+    const image = this.onImageSubmit();
+
+    this.recipeSubmit.emit({
+      recipe,
+      image,
+    });
   }
 }

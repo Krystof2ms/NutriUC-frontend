@@ -1,18 +1,15 @@
 <div class="flex flex-col gap-4">
   <div class="h-80 w-full overflow-hidden rounded-xl">
-    <cropper-canvas
-      class="h-full w-full"
-      background
-    >
+    <cropper-canvas class="h-full w-full" background>
       <cropper-image
+        #cropperImage
         [attr.src]="image()"
         alt="Imagen para recortar"
         translatable
         scalable
-        :min-fit="cover"
-        :initial-fit="cover"
-        :min-inset="0"
-        /* :min-inset="auto" zoom */
+        [attr.min-fit]="'cover'"
+        [attr.initial-fit]="'cover'"
+        [attr.min-inset]="'0'"
       />
 
       <cropper-selection
@@ -22,13 +19,10 @@
         movable
         resizable
         outlined
+        zoomable
+        [attr.min-inset]="'0'"
       >
-        <cropper-handle
-          action="move"
-          plain
-          :min-inset="0"
-          theme-color="rgba(255,255,255,0.35)"
-        />
+        <cropper-handle action="move" plain :min-inset="0" theme-color="rgba(255,255,255,0.35)" />
 
         <cropper-handle action="n-resize" />
         <cropper-handle action="e-resize" />

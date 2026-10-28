@@ -2,9 +2,17 @@ import {
   CursorDirection,
   CursorPageRecipeDTO,
   ErrorResponseMap,
+  MessageResponse,
+  RecipeCreate,
+  RecipeCreateResponses,
+  RecipeDeleteImageResponses,
+  RecipeDeleteResponses,
   RecipeDTO,
   RecipeGetByIdResponses,
   RecipeSearchResponses,
+  RecipeUpdate,
+  RecipeUpdateImageResponses,
+  RecipeUpdateResponses,
 } from '@api/index';
 import { inject, Service } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -14,6 +22,11 @@ import { normalizeApi } from '@app/shared/utils/to-normalize-api';
 
 type GetSearchErrors = ApiError<ErrorResponseMap<RecipeSearchResponses>>;
 type GetRecipeErrors = ApiError<ErrorResponseMap<RecipeGetByIdResponses>>;
+type UpdateRecipeErrors = ApiError<ErrorResponseMap<RecipeUpdateResponses>>;
+type UpdateRecipeImageErrors = ApiError<ErrorResponseMap<RecipeUpdateImageResponses>>;
+type DeleteRecipeImageErrors = ApiError<ErrorResponseMap<RecipeDeleteImageResponses>>;
+type CreateRecipeErrors = ApiError<ErrorResponseMap<RecipeCreateResponses>>;
+type DeleteRecipeErrors = ApiError<ErrorResponseMap<RecipeDeleteResponses>>;
 
 @Service()
 export class RecipeService {
@@ -61,6 +74,49 @@ export class RecipeService {
   getById(id: string) {
     return normalizeApi<RecipeDTO, GetRecipeErrors>(
       this.http.get<RecipeDTO>(`${this.apiUrl}/recipe/${id}`),
+    );
+  }
+
+  updateRecipe(id: number, data: RecipeUpdate) {
+    return normalizeApi<MessageResponse, UpdateRecipeErrors>(
+      this.http.patch<MessageResponse>(`${this.apiUrl}/recipe/${id}`, data, {
+        withCredentials: true,
+      }),
+    );
+  }
+
+  updateImage(id: number, image: Blob) {
+    const formData = new FormData();
+    formData.append('image', image, 'image.webp');
+
+    return normalizeApi<MessageResponse, UpdateRecipeImageErrors>(
+      this.http.put<MessageResponse>(`${this.apiUrl}/recipe/${id}/img`, formData, {
+        withCredentials: true,
+      }),
+    );
+  }
+
+  deleteImage(id: number) {
+    return normalizeApi<MessageResponse, DeleteRecipeImageErrors>(
+      this.http.delete<MessageResponse>(`${this.apiUrl}/recipe/${id}/img`, {
+        withCredentials: true,
+      }),
+    );
+  }
+
+  create(recipe: RecipeCreate) {
+    return normalizeApi<MessageResponse<number>, CreateRecipeErrors>(
+      this.http.post<MessageResponse<number>>(`${this.apiUrl}/recipe`, recipe, {
+        withCredentials: true,
+      }),
+    );
+  }
+
+  delete(id: number) {
+    return normalizeApi<MessageResponse, DeleteRecipeErrors>(
+      this.http.delete<MessageResponse>(`${this.apiUrl}/recipe/${id}`, {
+        withCredentials: true,
+      }),
     );
   }
 }

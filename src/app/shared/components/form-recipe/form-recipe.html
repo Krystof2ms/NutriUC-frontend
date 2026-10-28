@@ -1,4 +1,4 @@
-<form [formRoot]="form" class="space-y-6">
+<form [formRoot]="form" class="space-y-6" (submit)="onSubmit()">
   <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
     <h3 class="font-semibold tracking-tight text-base flex items-center gap-2 space-y-1.5 p-6">
       <svg lucideUtensilsCrossed class="w-6" />
@@ -58,6 +58,52 @@
         />
         @if (descriptionError()) {
           <span class="field-error">{{ descriptionError() }}</span>
+        }
+      </div>
+
+      <div class="">
+        <label class="mb-4 font-medium" for="image-recipe">Foto de Receta</label>
+        <div class="flex gap-8 items-center">
+          @if (imageResult(); as image) {
+            <img [src]="image" alt="Imagen seleccionada" class="w-50 rounded-md" />
+          }
+
+          <div class="flex flex-col w-fit">
+            <button
+              type="button"
+              class="flex gap-2 w-fit py-2 px-2.5 mb-2 rounded-lg bg-red-800 hover:bg-red-600 hover:-translate-y-0.5 transition effect-clicked disabled:bg-muted-foreground"
+              [disabled]="!imageResult()"
+              (click)="onImageDelete()"
+            >
+              <svg lucideTrash class="w-6" />
+              Eliminar
+            </button>
+            <input
+              #fileInput
+              id="image-recipe"
+              class="input-image"
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+            />
+
+            <span class="text-muted-foreground text-sm"> JPG, PNG o WebP. Máximo 2 MB. </span>
+          </div>
+        </div>
+
+        @if (imageUrl()) {
+          <div class="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4">
+            <div class="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl">
+              <h3 class="mb-4 text-lg font-semibold">Recortar avatar</h3>
+
+              <app-image-cropper
+                class=""
+                [image]="imageUrl() ?? ''"
+                (cropped)="onCropped($event)"
+                (cancelled)="onCropCancel()"
+              />
+            </div>
+          </div>
         }
       </div>
     </div>
@@ -176,7 +222,6 @@
     <button
       class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors bg-primary text-primary-foreground hover:bg-primary/80 h-10 px-4 py-2 effect-clicked"
       type="submit"
-      (click)="onSubmit()"
     >
       <!-- [disabled]="!isSubmitDisabled()" -->
       <svg class="w-6" lucideSave />

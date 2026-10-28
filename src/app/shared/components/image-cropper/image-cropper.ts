@@ -26,7 +26,7 @@ CropperSelection.$define();
 })
 export class ImageCropper {
   image = input.required<string>();
-  aspectRatio = input<number>(NaN);
+  aspectRatio = input<number | undefined>(undefined);
 
   cropped = output<Blob>();
   cancelled = output<void>();

@@ -40,3 +40,19 @@
 .btn-delete:disabled {
   @apply text-muted-foreground;
 }
+
+
+.input-image {
+  @apply block w-full rounded-lg border border-input
+      bg-field text-sm text-foreground
+      file:mr-4 file:cursor-pointer
+      hover:file:bg-accent
+      focus-visible:outline-none
+      focus-visible:ring-2 focus-visible:ring-ring
+      focus-visible:ring-offset-2;
+}
+
+.input-image::file-selector-button {
+  @apply border-0 border-r border-input bg-muted px-4 py-2
+      font-medium text-accent-foreground;
+}/*  */

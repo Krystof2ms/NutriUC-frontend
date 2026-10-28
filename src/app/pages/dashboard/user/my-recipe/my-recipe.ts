@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { API_URL } from '@app/config/api.config';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { ErrorClient } from '@app/shared/components/error-client/error-client';
 import { UserIcon } from '@app/shared/components/user-icon/user-icon';
@@ -25,6 +26,7 @@ type GetErrors = ApiError<ErrorResponseMap<RecipeGetByIdResponses>>;
   templateUrl: './my-recipe.html',
 })
 export class MyRecipe {
+  readonly apiUrl = inject(API_URL);
   private readonly route = inject(ActivatedRoute);
   private router = inject(Router);
   private readonly recipeService = inject(RecipeService);
