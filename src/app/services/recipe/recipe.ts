@@ -87,7 +87,7 @@ export class RecipeService {
 
   updateImage(id: number, image: Blob) {
     const formData = new FormData();
-    formData.append('avatar', image, 'image.webp');
+    formData.append('image', image, 'image.webp');
 
     return normalizeApi<MessageResponse, UpdateRecipeImageErrors>(
       this.http.put<MessageResponse>(`${this.apiUrl}/recipe/${id}/img`, formData, {
@@ -105,8 +105,8 @@ export class RecipeService {
   }
 
   create(recipe: RecipeCreate) {
-    return normalizeApi<MessageResponse, CreateRecipeErrors>(
-      this.http.post<MessageResponse>(`${this.apiUrl}/recipe`, recipe, {
+    return normalizeApi<MessageResponse<number>, CreateRecipeErrors>(
+      this.http.post<MessageResponse<number>>(`${this.apiUrl}/recipe`, recipe, {
         withCredentials: true,
       }),
     );
