@@ -37,7 +37,10 @@ export class Login {
             if (!response.success) throw new Error('login http error');
 
             this.toast.info('Bienvenido...');
-            setTimeout(() => this.router.navigate(['/dashboard']), 2000);
+            setTimeout(
+              () => this.router.navigate([`/dashboard/${response.data.message.role}`]),
+              2000,
+            );
 
             this.error.set(false);
           } catch (error) {
