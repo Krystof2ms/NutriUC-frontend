@@ -5,6 +5,7 @@ import { normalizeApi } from '@app/shared/utils/to-normalize-api';
 import {
   AuthLoginResponses,
   AuthLogoutResponses,
+  AuthResponse,
   ErrorResponseMap,
   MessageResponse,
   UserMeResponses,
@@ -67,8 +68,8 @@ export class AuthService {
 
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
 
-    return normalizeApi<MessageResponse, LoginErrors>(
-      this.http.post<MessageResponse>(`${this.authApiUrl}/login`, body.toString(), {
+    return normalizeApi<MessageResponse<AuthResponse>, LoginErrors>(
+      this.http.post<MessageResponse<AuthResponse>>(`${this.authApiUrl}/login`, body.toString(), {
         headers,
         withCredentials: true,
       }),
