@@ -112,7 +112,7 @@
   <div class="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
     <div class="flex flex-row justify-between">
       <h3 class="font-semibold text-base">🧾 Ingredientes</h3>
-      <button class="btn-add" (click)="addIngredient()">
+      <button type="button" class="btn-add" (click)="addIngredient()">
         <svg lucidePlus class="w-4" />
         Añadir
       </button>
@@ -173,7 +173,7 @@
         <svg class="w-4" lucideListOrdered />
         Preparación
       </h3>
-      <button class="btn-add" (click)="addInstruction()">
+      <button class="btn-add" type="button" (click)="addInstruction()">
         <svg lucidePlus class="w-4" />
         Añadir
       </button>
@@ -222,13 +222,14 @@
     <button
       class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors bg-primary text-primary-foreground hover:bg-primary/80 h-10 px-4 py-2 effect-clicked"
       type="submit"
+      [disabled]="isSubmitDisabled()"
     >
       <!-- [disabled]="!isSubmitDisabled()" -->
       <svg class="w-6" lucideSave />
-      @if (isSubmitDisabled()) {
-        Guardar cambios
-      } @else {
+      @if (form().submitting()) {
         Guardando cambios...
+      } @else {
+        Guardar cambios
       }
     </button>
     <button
