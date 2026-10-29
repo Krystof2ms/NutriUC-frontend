@@ -70,6 +70,10 @@ export class FormRecipe {
 
   readonly form = form(this.model, (path) => {
     validateStandardSchema(path, updateRecipeDefaultSchema);
+  }, {
+    submission: {
+      action: async (_) => this.onSubmit()
+    }
   });
 
   nameError = computed(() =>

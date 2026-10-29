@@ -81,17 +81,16 @@
 
   --color-overlay: oklch(95% 0.02 87.982);
 
-  /* Sileo styles */
-  --sileo-state-success: oklch(0.55 0.14 150);
-  --sileo-state-loading: oklch(0.75 0.02 150);
-  --sileo-state-error: oklch(0.62 0.22 25);
-  --sileo-state-warning: oklch(0.75 0.18 85);
-  --sileo-state-info: oklch(0.65 0.12 210);
-  --sileo-state-action: var(--color-primary);
+  /* Sonner styles */
+  --color-sonner-state-success: oklch(0.55 0.14 150);
+  --color-sonner-state-loading: oklch(0.75 0.02 150);
+  --color-sonner-state-error: oklch(0.62 0.22 25);
+  --color-sonner-state-warning: oklch(0.75 0.18 85);
+  --color-sonner-state-info: oklch(0.65 0.12 210);
+  --color-sonner-state-action: var(--color-primary);
 
-  --sileo-width: 350px;
-  --sileo-height: 44px;
-  --sileo-duration: 500ms;
+  --sonner-width: 350px;
+  --sonner-height: 44px;
 }
 
 @layer base {
@@ -158,12 +157,12 @@
 
     --color-overlay: oklch(0.27 0.05 150);
 
-    --sileo-state-success: oklch(0.65 0.14 152);
-    --sileo-state-loading: oklch(0.55 0.02 150);
-    --sileo-state-error: oklch(0.55 0.2 25);
-    --sileo-state-warning: oklch(0.75 0.16 85);
-    --sileo-state-info: oklch(0.7 0.12 210);
-    --sileo-state-action: var(--color-primary);
+    --color-sonner-state-success: oklch(0.65 0.14 152);
+    --color-sonner-state-loading: oklch(0.55 0.02 150);
+    --color-sonner-state-error: oklch(0.55 0.2 25);
+    --color-sonner-state-warning: oklch(0.75 0.16 85);
+    --color-sonner-state-info: oklch(0.7 0.12 210);
+    --color-sonner-state-action: var(--color-primary);
 
     --breakpoint-sx: 400rem;
   }

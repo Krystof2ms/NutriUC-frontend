@@ -322,6 +322,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AuthResponse */
+        AuthResponse: {
+            /** Text */
+            text: string;
+            /** Role */
+            role: string;
+        };
         /** Body_updateAvatar_api_v1_recipes_recipe__id__img_put */
         Body_updateAvatar_api_v1_recipes_recipe__id__img_put: {
             /** Image */
@@ -403,6 +410,10 @@ export interface components {
         MessageResponse: {
             /** Message */
             message: string;
+        };
+        /** MessageResponse[AuthResponse] */
+        MessageResponse_AuthResponse_: {
+            message: components["schemas"]["AuthResponse"];
         };
         /** MessageResponse[int] */
         MessageResponse_int_: {
@@ -617,7 +628,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MessageResponse"];
+                    "application/json": components["schemas"]["MessageResponse_AuthResponse_"];
                 };
             };
             /** @description User Invalid credentials */

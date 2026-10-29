@@ -4,17 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/services/auth/auth';
 import { Header } from '@app/shared/components/header/header';
 import { InputPassword } from '@app/shared/components/input-password/input-password';
+import { Sonner } from '@app/shared/components/sonner/sonner';
 import { loginSchema, type LoginSchema } from '@app/shared/schemas/user';
+import { toast } from 'ngx-sonner';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  imports: [Header, InputPassword, FormField, FormRoot, RouterLink],
+  imports: [Sonner, Header, InputPassword, FormField, FormRoot, RouterLink],
   selector: 'app-login',
   templateUrl: './login.html',
 })
 export class Login {
   private router = inject(Router);
   private authService = inject(AuthService);
+
+  protected readonly toast = toast;
 
   model = signal<LoginSchema>({ email: '', password: '' });
   loginForm = form(
@@ -26,18 +30,25 @@ export class Login {
       submission: {
         action: async (field) => {
           try {
-            const success = await firstValueFrom(
+            const response = await firstValueFrom(
               this.authService.login(this.model().email, this.model().password),
             );
 
-            if (success) {
-              this.error.set(false);
-              this.router.navigate(['/dashboard']);
-            } else {
-              this.error.set(true);
-            }
+            if (!response.success) throw new Error('login http error');
+
+            this.toast.info('Bienvenido...');
+            setTimeout(
+              () => this.router.navigate([`/dashboard/${response.data.message.role}`]),
+              2000,
+            );
+
+            this.error.set(false);
           } catch (error) {
             console.error(error);
+
+            this.toast.error('Error al acceder');
+
+            this.error.set(true);
           }
         },
       },

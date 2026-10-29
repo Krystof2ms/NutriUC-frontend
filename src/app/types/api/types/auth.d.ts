@@ -1,5 +1,7 @@
 import type { components, operations } from '../schema';
 
+export type AuthResponse = components['schemas']['AuthResponse'];
+
 export type LoginForm = components['schemas']['LoginForm'];
 
 /* /auth/login */

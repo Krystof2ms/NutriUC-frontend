@@ -27,6 +27,7 @@
     "@cropper/element-selection": "^2.3.1",
     "@lucide/angular": "^1.48.0",
     "express": "^5.1.0",
+    "ngx-sonner": "^3.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zod": "^4.6.5"

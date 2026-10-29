@@ -10,6 +10,8 @@ import { AuthService } from '@app/services/auth/auth';
 import { toDefaultSignal } from '@app/shared/utils/to-default-signal';
 import { ImageCropper } from '@app/shared/components/image-cropper/image-cropper';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Sonner } from '@app/shared/components/sonner/sonner';
+import { toast } from 'ngx-sonner';
 
 type Form = UpdateSchema;
 
@@ -22,6 +24,7 @@ type Form = UpdateSchema;
     FormField,
     UserIcon,
     ImageCropper,
+    Sonner,
   ],
   selector: 'app-profile-edit',
   styleUrl: './profile-edit.css',
@@ -32,6 +35,8 @@ export class ProfileEdit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+
+  protected readonly toast = toast;
 
   avatarBlob = signal<Blob | null>(null);
 
@@ -85,37 +90,7 @@ export class ProfileEdit {
     {
       submission: {
         action: async (field) => {
-          const payload = this.changes();
-
-          const update = {
-            name: payload['username'],
-            email: payload['email'],
-            password: payload['confirmPassword'],
-          } satisfies UserUpdate;
-
-          try {
-            const tasks = [];
-
-            console.log("changes: ", Object.keys(this.changes()).length > 0, this.changes())
-
-            if (Object.keys(this.changes()).length > 0) {
-              tasks.push(firstValueFrom(this.userService.updateData(update)));
-            }
-
-            const avatarBlob = this.avatarBlob();
-
-            if (avatarBlob) {
-              tasks.push(firstValueFrom(this.userService.updateAvatarBlob(avatarBlob)));
-            }
-
-            if (tasks.length > 0) {
-              const results = await Promise.allSettled(tasks);
-
-              this.authService.invalidateData();
-              this.router.navigate(['..'], { relativeTo: this.route });
-              console.log(results);
-            }
-          } catch {}
+          await this.submitProfile();
         },
       },
     },
@@ -152,6 +127,53 @@ export class ProfileEdit {
     if (!this.passwordEdit()) {
       this.updateForm.newPassword().reset('');
       this.updateForm.confirmPassword().reset('');
+    }
+  }
+
+  private async submitProfile(): Promise<void> {
+    const payload = this.changes();
+
+    const update = {
+      name: payload['username'],
+      email: payload['email'],
+      password: payload['confirmPassword'],
+    } satisfies UserUpdate;
+
+    const tasks: Promise<unknown>[] = [];
+
+    if (Object.keys(payload).length > 0) {
+      tasks.push(firstValueFrom(this.userService.updateData(update)));
+    }
+
+    const avatarBlob = this.avatarBlob();
+
+    if (avatarBlob) {
+      tasks.push(firstValueFrom(this.userService.updateAvatarBlob(avatarBlob)));
+    }
+
+    if (tasks.length === 0) return;
+
+    try {
+      const results = await Promise.allSettled(tasks);
+
+      const hasErrors = results.some((result) => result.status === 'rejected');
+
+      if (hasErrors) {
+        this.toast.error('No se pudieron guardar todos los cambios');
+        return;
+      }
+
+      this.authService.invalidateData();
+
+      this.toast.success('Perfil actualizado correctamente');
+
+      setTimeout(() => {
+        void this.router.navigate(['..'], {
+          relativeTo: this.route,
+        });
+      }, 1500);
+    } catch {
+      this.toast.error('Ocurrió un error al actualizar el perfil');
     }
   }
 }
