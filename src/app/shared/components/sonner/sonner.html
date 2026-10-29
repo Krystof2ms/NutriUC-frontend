@@ -1,5 +1,4 @@
 <ngx-sonner-toaster
-  class=" shadow-card"
   closeButton
   position="top-center"
   [toastOptions]="{
@@ -19,15 +18,15 @@
       info: 'border-l-4 border-l-sonner-state-info',
       loading: 'border-l-4 border-l-sonner-state-loading',
       closeButton: `
-    !bg-destructive/80
-    !text-destructive-foreground
-    !border
-    !border-border
-    hover:!bg-destructive/50
-    hover:!text-destructive-foreground
+    bg-destructive/80!
+    text-destructive-foreground!
+    border-2!
+    border-border!
+    hover:bg-destructive/50!
+    hover:text-destructive-foreground!
     transition-colors
     rounded-md
-    p-2
+    p-1!
   `,
     },
   }"
