@@ -7,7 +7,7 @@ import { EventManager } from '../event-manager/event-manager';
 
 @Service()
 export class SSEService {
-  private readonly apiUrl = `${inject(API_URL)}/recipes`;
+  private readonly apiUrl = `${inject(API_URL)}/events`;
 
   private readonly eventManager = inject(EventManager);
   private readonly _sseClient = inject(SseClient);
@@ -29,7 +29,7 @@ export class SSEService {
 
     this.subscription = this._sseClient
       .stream(
-        `${this.apiUrl}/events/events`,
+        `${this.apiUrl}/events`,
         {
           keepAlive: true,
           reconnectionDelay: 3000,
