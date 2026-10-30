@@ -1,21 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, resource, Service, signal } from '@angular/core';
 import { API_URL } from '@app/config/api.config';
+import { ServerEvent } from '@app/types/api';
 
 import { SseClient } from 'ngx-sse-client';
 import { Subscription } from 'rxjs';
 
-export interface ServerEvent<T = unknown> {
-  event: string;
-  data: T;
-}
-
 @Service()
-export class EventService {
+export class SSEService {
   private readonly apiUrl = `${inject(API_URL)}/recipes`;
 
   private readonly _sseClient = inject(SseClient);
-
 
   private readonly eventState = signal<{
     value: ServerEvent | null;
@@ -42,7 +36,7 @@ export class EventService {
         },
         {
           withCredentials: true,
-        }
+        },
       )
       .subscribe({
         next: (event) => {
