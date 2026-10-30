@@ -1,14 +1,15 @@
 import { inject, resource, Service, signal } from '@angular/core';
 import { API_URL } from '@app/config/api.config';
 import { ServerEvent } from '@app/types/api';
-
 import { SseClient } from 'ngx-sse-client';
 import { Subscription } from 'rxjs';
+import { EventManager } from '../event-manager/event-manager';
 
 @Service()
 export class SSEService {
   private readonly apiUrl = `${inject(API_URL)}/recipes`;
 
+  private readonly eventManager = inject(EventManager);
   private readonly _sseClient = inject(SseClient);
 
   private readonly eventState = signal<{
@@ -39,27 +40,8 @@ export class SSEService {
         },
       )
       .subscribe({
-        next: (event) => {
-          if (event.type === 'error') {
-            const error = event as ErrorEvent;
-            this.connectionError.set(error.message);
-            return;
-          }
-
-          const message = event as MessageEvent;
-
-          try {
-            this.eventState.set({
-              value: {
-                event: message.type,
-                data: JSON.parse(message.data),
-              },
-            });
-
-            this.connectionError.set(null);
-          } catch {
-            this.connectionError.set('Invalid SSE payload');
-          }
+        next: (message) => {
+          this.eventManager.dispatch(message as MessageEvent);
         },
 
         error: (error: unknown) => {
