@@ -7,7 +7,6 @@ import { NavbarDashboard } from '@app/shared/components/navbar-dashboard/navbar-
 @Component({
   imports: [RouterOutlet, NavbarDashboard],
   selector: 'app-dashboard-user',
-  styleUrl: './dashboard-user.css',
   templateUrl: './dashboard-user.html',
 })
 export class DashboardUser {

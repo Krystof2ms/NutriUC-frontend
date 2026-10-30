@@ -12,7 +12,6 @@ import { switchMap } from 'rxjs';
 @Component({
   imports: [SearchBar, RecipeCard, NavigationButtons, LucideUtensilsCrossed, LucidePlus],
   selector: 'app-my-recipes',
-  styleUrl: './my-recipes.css',
   templateUrl: './my-recipes.html',
 })
 export class MyRecipes {

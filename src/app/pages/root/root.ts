@@ -17,7 +17,6 @@ type Feature = {
 @Component({
   imports: [LucideDynamicIcon],
   selector: 'app-root',
-  styleUrl: './root.css',
   templateUrl: './root.html',
 })
 export class Root {

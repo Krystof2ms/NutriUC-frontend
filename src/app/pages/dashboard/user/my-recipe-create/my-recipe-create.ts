@@ -10,7 +10,6 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   imports: [FormRecipe, LucideArrowLeft, RouterLink],
   selector: 'app-my-recipe-create',
-  styleUrl: './my-recipe-create.css',
   templateUrl: './my-recipe-create.html',
 })
 export class MyRecipeCreate {
