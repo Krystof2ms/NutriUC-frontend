@@ -12,7 +12,6 @@ import { filter, firstValueFrom, map, switchMap } from 'rxjs';
 @Component({
   imports: [RouterLink, FormRecipe, LucideArrowLeft, ErrorClient],
   selector: 'app-my-recipe-edit',
-  styleUrl: './my-recipe-edit.css',
   templateUrl: './my-recipe-edit.html',
 })
 export class MyRecipeEdit {

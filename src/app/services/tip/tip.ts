@@ -3,16 +3,23 @@ import {
   CursorDirection,
   CursorPageTipDTO,
   ErrorResponseMap,
-  TipGetByIdResponses,
+  MessageResponse,
+  TipCreate,
+  TipCreateResponses,
+  TipDeleteResponses,
   TipSearchResponses,
+  TipUpdate,
+  TipUpdateResponses,
 } from '@api/index';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ApiError } from '@app/types/http';
 import { normalizeApi } from '@app/shared/utils/to-normalize-api';
 
 type GetSearchErrors = ApiError<ErrorResponseMap<TipSearchResponses>>;
+type PatchUpdateErrors = ApiError<ErrorResponseMap<TipUpdateResponses>>;
+type PostCreateErrors = ApiError<ErrorResponseMap<TipCreateResponses>>;
+type DeleteErrors = ApiError<ErrorResponseMap<TipDeleteResponses>>;
 
 @Service()
 export class TipService {
@@ -54,6 +61,24 @@ export class TipService {
         params,
         withCredentials: mine,
       }),
+    );
+  }
+
+  update(id: number, data: TipUpdate) {
+    return normalizeApi<MessageResponse, PatchUpdateErrors>(
+      this.http.patch<MessageResponse>(`${this.apiUrl}/tip/${id}`, data, { withCredentials: true }),
+    );
+  }
+
+  create(data: TipCreate) {
+    return normalizeApi<MessageResponse, PostCreateErrors>(
+      this.http.patch<MessageResponse>(`${this.apiUrl}/tip`, data, { withCredentials: true }),
+    );
+  }
+
+  delete(id: number) {
+    return normalizeApi<MessageResponse, DeleteErrors>(
+      this.http.delete<MessageResponse>(`${this.apiUrl}/tip/${id}`, { withCredentials: true }),
     );
   }
 }
