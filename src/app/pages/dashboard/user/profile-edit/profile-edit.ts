@@ -10,8 +10,7 @@ import { AuthService } from '@app/services/auth/auth';
 import { toDefaultSignal } from '@app/shared/utils/to-default-signal';
 import { ImageCropper } from '@app/shared/components/image-cropper/image-cropper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Sonner } from '@app/shared/components/sonner/sonner';
-import { toast } from 'ngx-sonner';
+import { Sonner, toast } from '@app/shared/components/sonner/sonner';
 
 type Form = UpdateSchema;
 

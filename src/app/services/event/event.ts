@@ -11,7 +11,7 @@ export class EventService {
 
 private readonly eventManager = inject(EventManager);
 
-  private socket?: WebSocketSubject<ServerEvent>;
+  private socket?: WebSocketSubject<ServerEvent<any>>;
 
   private readonly eventState = signal<{
     value: ServerEvent<MessageEvent> | null;
@@ -36,7 +36,7 @@ private readonly eventManager = inject(EventManager);
     this.subscription = this.socket.subscribe({
       next: (message) => {
         console.log(message)
-        // this.eventManager.dispatch(message.data);
+        this.eventManager.dispatch(message.data);
       },
 
       error: (error: unknown) => {
