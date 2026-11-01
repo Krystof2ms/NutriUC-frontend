@@ -28,7 +28,7 @@
 }
 
 .field-input[data-edited] {
-  @apply text-foreground border-secondary;
+  @apply text-foreground border-2;
 }
 
 .field-input:not([data-edited]) {
