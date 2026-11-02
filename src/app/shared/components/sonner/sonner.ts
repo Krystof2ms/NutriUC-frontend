@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgxSonnerToaster, toast as ngxToast } from 'ngx-sonner';
+import { NgxSonnerToaster } from 'ngx-sonner';
 
 @Component({
   imports: [NgxSonnerToaster],
@@ -7,4 +7,3 @@ import { NgxSonnerToaster, toast as ngxToast } from 'ngx-sonner';
   templateUrl: './sonner.html',
 })
 export class Sonner {}
-export const toast = ngxToast;

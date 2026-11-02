@@ -10,7 +10,7 @@ import { AuthService } from '@app/services/auth/auth';
 import { toDefaultSignal } from '@app/shared/utils/to-default-signal';
 import { ImageCropper } from '@app/shared/components/image-cropper/image-cropper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Sonner, toast } from '@app/shared/components/sonner/sonner';
+import { ToastService } from '@app/services/toast/toast';
 
 type Form = UpdateSchema;
 
@@ -23,7 +23,6 @@ type Form = UpdateSchema;
     FormField,
     UserIcon,
     ImageCropper,
-    Sonner,
   ],
   selector: 'app-profile-edit',
   styleUrl: './profile-edit.css',
@@ -35,7 +34,7 @@ export class ProfileEdit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  protected readonly toast = toast;
+  protected readonly toast = inject(ToastService);
 
   avatarBlob = signal<Blob | null>(null);
 
