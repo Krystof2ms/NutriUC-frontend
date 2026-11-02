@@ -3,11 +3,15 @@ import {
   RecipeEventChannel,
   UnknownEventChannel,
   UserEventChannel,
+  ServerEventChannel,
   EventParser,
+} from '@app/shared/events';
+import {
+  KnownEvent,
   RecipeEvent,
   UserEvent,
-} from '@app/shared/events';
-import { KnownEvent } from '@app/shared/schemas/events';
+  ServerEvent as ServerWS,
+} from '@app/shared/schemas/events';
 import { ServerEvent } from '@app/types/api';
 
 @Service()
@@ -15,6 +19,7 @@ export class EventManager {
   private readonly userChannel = inject(UserEventChannel);
   private readonly recipeChannel = inject(RecipeEventChannel);
   private readonly unknownChannel = inject(UnknownEventChannel);
+  private readonly serverChannel = inject(ServerEventChannel);
 
   dispatch(message: ServerEvent): void {
     const result = EventParser.fromMessage(message);
@@ -35,14 +40,12 @@ export class EventManager {
   }
 
   private routeKnownEvent(event: KnownEvent): void {
-    switch (true) {
-      case event.event.startsWith('user.'):
-        this.userChannel.dispatch(event as UserEvent);
-        break;
-
-      case event.event.startsWith('recipe.'):
-        this.recipeChannel.dispatch(event as RecipeEvent);
-        break;
+    if (event.event.startsWith('user.')) {
+      this.userChannel.dispatch(event as UserEvent);
+    } else if (event.event.startsWith('recipe.')) {
+      this.recipeChannel.dispatch(event as RecipeEvent);
+    } else if (event.event.startsWith('server.')) {
+      this.serverChannel.dispatch(event as ServerWS);
     }
   }
 }
