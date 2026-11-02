@@ -1,14 +1,16 @@
-import { EventChannel } from "@app/shared/events/channel/base";
-import { Subscription } from "rxjs";
+import { EventChannel } from '@app/shared/events/channel/base';
+import { Directive, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-export abstract class EventListener {
+@Directive()
+export abstract class EventListener implements OnDestroy {
   protected readonly subscriptions = new Subscription();
 
   protected listen<T>(channel: EventChannel<T>, handler: (event: T) => void): void {
     this.subscriptions.add(channel.events$.subscribe(handler));
   }
 
-  destroy(): void {
+  ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 }
