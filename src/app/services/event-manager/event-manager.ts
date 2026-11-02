@@ -8,6 +8,7 @@ import {
   UserEvent,
 } from '@app/shared/events';
 import { KnownEvent } from '@app/shared/schemas/events';
+import { ServerEvent } from '@app/types/api';
 
 @Service()
 export class EventManager {
@@ -15,7 +16,7 @@ export class EventManager {
   private readonly recipeChannel = inject(RecipeEventChannel);
   private readonly unknownChannel = inject(UnknownEventChannel);
 
-  dispatch(message: MessageEvent): void {
+  dispatch(message: ServerEvent): void {
     const result = EventParser.fromMessage(message);
 
     switch (result.status) {

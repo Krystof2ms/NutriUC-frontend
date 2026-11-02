@@ -35,8 +35,7 @@ private readonly eventManager = inject(EventManager);
 
     this.subscription = this.socket.subscribe({
       next: (message) => {
-        console.log(message)
-        this.eventManager.dispatch(message.data);
+        this.eventManager.dispatch(message);
       },
 
       error: (error: unknown) => {
