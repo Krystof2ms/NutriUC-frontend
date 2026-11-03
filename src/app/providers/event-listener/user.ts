@@ -14,6 +14,7 @@ export class UserEventListener extends EventListener {
 
     this.listen(userChannel, (event) => {
       this.handleRecipeEvent(event);
+      console.log("event:", event)
     });
   }
 

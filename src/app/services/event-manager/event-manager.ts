@@ -23,6 +23,7 @@ export class EventManager {
 
   dispatch(message: ServerEvent): void {
     const result = EventParser.fromMessage(message);
+      console.log("event:", message, result.status)
 
     switch (result.status) {
       case 'valid':
@@ -41,6 +42,7 @@ export class EventManager {
 
   private routeKnownEvent(event: KnownEvent): void {
     if (event.event.startsWith('user.')) {
+      console.log("event:", event)
       this.userChannel.dispatch(event as UserEvent);
     } else if (event.event.startsWith('recipe.')) {
       this.recipeChannel.dispatch(event as RecipeEvent);
