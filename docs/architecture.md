@@ -33,7 +33,17 @@ flowchart TD
             Normalize["normalizeApi<br/>typed result and error handling"]
             EventService["EventService<br/>RxJS WebSocket client"]
             EventManager["EventManager<br/>parse, validate, dispatch"]
-            EventListeners["Route-scoped event listeners<br/>User · Recipe"]
+            subgraph EventChannels["Event channels (Subject / Observable)"]
+                UserChannel["UserEventChannel"]
+                RecipeChannel["RecipeEventChannel"]
+                ServerChannel["ServerEventChannel"]
+                UnknownChannel["UnknownEventChannel"]
+            end
+            subgraph EventListeners["Route-scoped event listeners"]
+                UserListener["UserEventListener"]
+                RecipeListener["RecipeEventListener"]
+            end
+            ToastService["ToastService<br/>success · error · info · warning<br/>loading · dismiss (ngx-sonner)"]
             State["Signals<br/>auth status · current user · theme"]
             ApiTypes["Generated OpenAPI types<br/>and Zod schemas"]
         end
@@ -75,9 +85,15 @@ flowchart TD
     Dashboard --> EventService
     EventService --> EventManager
     EventManager --> ApiTypes
-    EventManager --> EventListeners
-    EventListeners --> UserService
-    EventListeners --> RecipeService
+    EventManager --> UserChannel
+    EventManager --> RecipeChannel
+    EventManager --> ServerChannel
+    EventManager --> UnknownChannel
+    UserChannel --> UserListener
+    RecipeChannel --> RecipeListener
+    UserListener --> ToastService
+    RecipeListener --> ToastService
+    ToastService --> Shared
     EventService <-->|"WebSocket events"| Socket
     Browser --> Express
     Express --> SSR
@@ -108,7 +124,7 @@ flowchart TD
 
 ### WebSocket events
 
-The dashboard layout connects `EventService` on construction and disconnects it when destroyed. The service derives `/events/connect` from `API_URL`, switches the URL scheme from HTTP(S) to WS(S), and consumes messages with `rxjs/webSocket`. `EventManager` parses and validates each message, then dispatches known user, recipe, and server events or routes unknown events to the unknown channel. User and recipe listeners are registered with the corresponding route providers.
+The dashboard layout connects `EventService` on construction and disconnects it when destroyed. The service derives `/events/connect` from `API_URL`, switches the URL scheme from HTTP(S) to WS(S), and consumes messages with `rxjs/webSocket`. `EventManager` parses and validates each message, then dispatches to `UserEventChannel`, `RecipeEventChannel`, `ServerEventChannel`, or `UnknownEventChannel`. Each channel is an observable event stream. Route-scoped user and recipe listeners subscribe to their channels and use `ToastService` (a `ngx-sonner` wrapper) to display image update or rejection feedback. The current diagram shows the server and unknown channels even though no route listener for them is registered here.
 
 ### State and shared UI
 
