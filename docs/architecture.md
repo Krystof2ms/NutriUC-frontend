@@ -10,13 +10,15 @@
 
 **NutriUC** is a health, nutrition, and recipe management web platform. This repository hosts the **Frontend Web Application**, built with Angular 22 (SSR + Client Hydration), communicating with a FastAPI asynchronous backend.
 
-The architecture decouples the responsive user interface from heavy computational tasks (such as image resizing, optimization, and conversion to WebP) by utilizing background worker queues and real-time Server-Sent Events (SSE) to update the client asynchronously.
+The frontend communicates with the backend through REST for application data and a WebSocket for real-time domain events. The backend implementation is outside this repository; its internal workers and persistence are shown as backend-side responsibilities where applicable.
 
 ---
 
 ## 2. End-to-End Architecture
 
-Below is the global architecture flow connecting the client frontend, the FastAPI runtime, the background queue/worker subsystem, and persistent storage:
+The diagram reflects the integration visible in this repository. The public and dashboard interfaces are rendered by Angular (SSR with client hydration). The browser uses the configured API base URL for REST calls; the authenticated dashboard also opens a WebSocket at `/events/connect`. Incoming events are parsed and routed to feature listeners.
+
+The Angular application; the backend API is configured separately through `API_URL`. In production the frontend uses the same-origin `/api/v1` path, while local development points to `http://localhost:3000/api/v1`. The WebSocket URL is derived from that base URL by switching `http(s)` to `ws(s)`.
 
 ---
 
@@ -63,10 +65,10 @@ The frontend leverages native Angular signals (`signal`, `computed`, `effect`) r
 Endpoints displaying high-volume datasets (such as `/recipes` and `/tips`) employ keyset pagination (`cursor`, `dir`, `limit`). The frontend services seamlessly manage directional pagination forward and backward without offset performance degradation.
 
 #### 4. Media Cropping & Client Pre-processing
-Avatar and recipe image uploads integrate modern web-component cropping (`@cropper/element-*`). The user crops and previews the image on the client before submitting, matching the backend worker's expected dimensions and WebP transformation requirements.
+Avatar and recipe image uploads integrate modern web-component cropping (`@cropper/element-*`). The user crops and previews the image on the client before submitting it through the corresponding API service.
 
-#### 5. Real-Time Server-Sent Events (SSE) Integration
-The client establishes a resilient connection to `/events/events`. When asynchronous background workers finish optimizing user avatars or recipe images, the frontend receives immediate updates and refreshes the reactive image keys in the UI without requiring full page reloads.
+#### 5. Real-Time WebSocket Events
+`EventService` opens a WebSocket connection to `/events/connect` while the `DashboardUser` layout is active, then closes it when the layout is destroyed. `EventManager` parses and validates incoming messages and dispatches them to user, recipe, server, or unknown event channels. Route-scoped listeners handle profile and recipe events and show toast feedback. The frontend currently handles image changed/rejected notifications; the backend's event production and any worker queue are outside this repository.
 
 #### 6. Route-Level Separation & Guards
 - **Public Space**: Fast, SSR-rendered pages (`/`, `/recetas`, `/recetas/:id`) accessible to search engines and unauthenticated visitors.
@@ -87,7 +89,7 @@ The client establishes a resilient connection to `/events/events`. When asynchro
 | **Media Handling** | Cropper.js Web Elements | `@cropper/element-*` `^2.3.1` |
 | **API Typings** | OpenAPI TypeScript | `^7.13.0` |
 | **Testing** | Vitest + JSDOM | `^4.0.8` |
-| **Backend API** | FastAPI / Python | Keyset search, async worker queue, SSE |
+| **Backend API** | FastAPI / Python | REST API and WebSocket event endpoint (`/events/connect`) |
 | **Database** | PostgreSQL | Version 18 with asyncpg pool |
 
 ---
@@ -95,5 +97,5 @@ The client establishes a resilient connection to `/events/events`. When asynchro
 ## 6. Current Roadmap (WIP)
 
 As the project is currently in progress, future architecture iterations will focus on:
-- [ ] Completing end-to-end SSE event handling in the user dashboard.
+- [x] Completing end-to-end WebSocket event handling and UI refresh behavior in the user dashboard.
 - [ ] Expanding recipe creation forms with dynamic nutritional calculation helpers.
