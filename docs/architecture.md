@@ -26,7 +26,10 @@ flowchart TD
 
         subgraph ClientArchitecture["Application services and state"]
             Auth["AuthService<br/>cookie-based session"]
-            ApiServices["API services<br/>User · Recipe · Tip · Category"]
+            UserService["UserService<br/>getStats · updateData · updateAvatarBlob"]
+            RecipeService["RecipeService<br/>search · getById · create · updateRecipe<br/>updateImage · deleteImage · delete"]
+            TipService["TipService<br/>search · create · update · delete"]
+            CategoryService["CategoryService<br/>getNames"]
             Normalize["normalizeApi<br/>typed result and error handling"]
             EventService["EventService<br/>RxJS WebSocket client"]
             EventManager["EventManager<br/>parse, validate, dispatch"]
@@ -52,20 +55,29 @@ flowchart TD
     Dashboard --> Shared
     Public --> Shared
     Login --> Auth
-    Guard --> Auth
+    Guard <--> Auth
     Auth --> State
-    Auth --> ApiServices
-    Dashboard --> ApiServices
-    Public --> ApiServices
-    ApiServices --> Normalize
+    Auth --> UserService
+    Dashboard <--> UserService
+    Dashboard <--> RecipeService
+    Dashboard <--> TipService
+    Public <--> RecipeService
+    Public <--> CategoryService
+    UserService --> Normalize
+    RecipeService --> Normalize
+    TipService --> Normalize
     Normalize --> ApiTypes
-    ApiServices --> Backend
-    Auth --> Backend
+    UserService <--> Backend
+    RecipeService <--> Backend
+    TipService <--> Backend
+    CategoryService <--> Backend
+    Auth <--> Backend
     Dashboard --> EventService
     EventService --> EventManager
     EventManager --> ApiTypes
     EventManager --> EventListeners
-    EventListeners --> ApiServices
+    EventListeners --> UserService
+    EventListeners --> RecipeService
     EventService <-->|"WebSocket events"| Socket
     Browser --> Express
     Express --> SSR
@@ -104,16 +116,16 @@ Angular Signals hold authentication status, the current user, theme state, and e
 
 ## Runtime and dependencies
 
-| Area | Current dependency/configuration |
-|---|---|
-| Angular | Angular packages `^22.1.0`; CLI/build `^22.1.6` |
-| SSR | `@angular/ssr` `^22.2.0`, Express `^5.1.0` |
-| HTTP and reactivity | Angular `HttpClient`, RxJS `~7.8.0`; WebSocket via `rxjs/webSocket` |
-| Styles | Tailwind CSS `^4.1.12`, `@tailwindcss/postcss` `^4.1.12` |
-| UI | `@lucide/angular` `^1.48.0`, `ngx-sonner` `^3.1.0` |
-| Cropper | `@cropper/element-*` packages `^2.3.1` |
-| Validation and API types | Zod `^4.6.5`, `openapi-typescript` `^7.13.0` |
-| Package manager | Bun `1.4.0` |
-| Unit testing | Vitest `^4.0.8`, JSDOM `^28.0.0`, Angular unit-test builder |
+| Area                     | Current dependency/configuration                                    |
+| ------------------------ | ------------------------------------------------------------------- |
+| Angular                  | Angular packages `^22.1.0`; CLI/build `^22.1.6`                     |
+| SSR                      | `@angular/ssr` `^22.2.0`, Express `^5.1.0`                          |
+| HTTP and reactivity      | Angular `HttpClient`, RxJS `~7.8.0`; WebSocket via `rxjs/webSocket` |
+| Styles                   | Tailwind CSS `^4.1.12`, `@tailwindcss/postcss` `^4.1.12`            |
+| UI                       | `@lucide/angular` `^1.48.0`, `ngx-sonner` `^3.1.0`                  |
+| Cropper                  | `@cropper/element-*` packages `^2.3.1`                              |
+| Validation and API types | Zod `^4.6.5`, `openapi-typescript` `^7.13.0`                        |
+| Package manager          | Bun `1.4.0`                                                         |
+| Unit testing             | Vitest `^4.0.8`, JSDOM `^28.0.0`, Angular unit-test builder         |
 
 Refer to `package.json` and `angular.json` for the full dependency list and build configuration.
