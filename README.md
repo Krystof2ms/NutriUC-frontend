@@ -1,164 +1,115 @@
-# NutriUC - Frontend
+# NutriUC Frontend
 
 [![Project Status: Work in Progress](https://img.shields.io/badge/status-work--in--progress-amber.svg)](#)
-[![Angular](https://img.shields.io/badge/Angular-22-dd0031.svg?logo=angular)](#)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8.svg?logo=tailwindcss)](#)
-[![Package Manager](https://img.shields.io/badge/package_manager-bun-fbf0df.svg?logo=bun)](#)
-[![Testing](https://img.shields.io/badge/tested_with-vitest-6e9f18.svg?logo=vitest)](#)
+[![Angular](https://img.shields.io/badge/Angular-22-dd0031.svg?logo=angular)](https://angular.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8.svg?logo=tailwindcss)](https://tailwindcss.com/)
+[![Package Manager](https://img.shields.io/badge/package_manager-bun-fbf0df.svg?logo=bun)](https://bun.sh/)
+[![Testing](https://img.shields.io/badge/tested_with-vitest-6e9f18.svg?logo=vitest)](https://vitest.dev/)
 
-Frontend web application for **NutriUC**, a health and nutrition platform for sharing recipes and wellness tips. Built with **Angular 22** featuring Server-Side Rendering (SSR), Client Hydration, standalone components, and modern reactive signals.
+NutriUC is a web application for discovering and managing recipes and nutrition tips. This repository contains the Angular frontend, including its Express SSR host, client-side routes, API clients, and authenticated dashboard.
 
 > [!NOTE]
-> **Project Status: Work in Progress (WIP)**  
-> This project is under active development. Features and API contracts may evolve.
+> **Work in progress:** routes, API contracts, and features can change during development.
 
----
+## Features
 
-## 🌟 Key Features
+- Angular 22 standalone components, Signals, lazy-loaded routes, and client hydration.
+- Angular SSR hosted by Express. `/` and `/login` are prerendered; other routes use client rendering.
+- Recipe discovery with search, category filters, and cursor-based pagination.
+- Authenticated user dashboard for profile, recipes, and tips.
+- Cookie-based authentication requests and a route guard for dashboard routes.
+- Client-side image cropping with Cropper.js web components.
+- WebSocket event handling for dashboard user and recipe events.
+- API types generated from the backend OpenAPI schema and Zod validation for application data/events.
+- Tailwind CSS v4, Lucide icons, and `ngx-sonner` notifications.
 
-- **Modern Angular 22 & SSR**: Built using standalone components, Angular Signals for state reactivity, and hydration enabled via Express SSR.
-- **Recipe Discovery**: Browse and explore recipes with cursor-based (keyset) pagination, category filtering, and responsive search.
-- **User Dashboard**: Protected area (`/dashboard/user`) for managing personal recipes, health tips, and profile information.
-- **Client-Side Image Cropping**: Smooth in-browser cropping for user avatars and recipe banners using modern Web Components (`@cropper/element-*`).
-- **Secure Cookie-Based Auth**: Full JWT authentication lifecycle (login, session validation, logout) using HTTP-only cookies and Angular route guards (`authGuard`).
-- **Real-Time Integration (SSE)**: Architecture prepared to receive asynchronous task completion events (e.g., avatar and recipe WebP processing) via Server-Sent Events.
-- **Tailwind CSS v4 & Lucide Icons**: Modern styling, custom animations, and a reactive theme switcher (Light / Dark mode).
-- **End-to-End Type Safety**: Strongly-typed API schema directly generated from backend OpenAPI definitions (`openapi-typescript`).
+## Architecture
 
----
+The frontend uses REST for application data and a WebSocket for dashboard events. See [the architecture documentation](docs/architecture.md) for the frontend diagram, routing, rendering, and integration details.
 
-## 🏗️ System Architecture
+## Technology
 
-This repository contains the **Frontend** web client. It interfaces with an asynchronous **FastAPI** backend backed by PostgreSQL 18, local asset storage, background image workers (`asyncio.Queue` + Pillow), and an SSE notification manager.
+| Area | Technology |
+|---|---|
+| Framework | Angular `^22.1.0` |
+| SSR | `@angular/ssr` `^22.2.0`, Express `^5.1.0` |
+| Runtime and package manager | Bun `1.4.0` |
+| Styling | Tailwind CSS `^4.1.12`, `@tailwindcss/postcss` |
+| Icons and notifications | `@lucide/angular` `^1.48.0`, `ngx-sonner` `^3.1.0` |
+| Reactive/event transport | RxJS `~7.8.0`, `rxjs/webSocket` |
+| Image cropping | Cropper.js element packages `^2.3.1` |
+| Validation and API types | Zod `^4.6.5`, `openapi-typescript` `^7.13.0` |
+| Unit testing | Vitest `^4.0.8`, JSDOM `^28.0.0` |
 
-```
-+-----------------------------------------------------------+
-|               Client Frontend (Angular 22)                |
-|  - Standalone Components & Layouts (Public & Dashboard)   |
-|  - Signal-based Stores & Normalized API Services          |
-|  - Server-Side Rendering (Express) + Client Hydration     |
-+-----------------------------+-----------------------------+
-                              |
-       +----------------------+----------------------+
-       | HTTP Requests (Cookies: JWT)                | SSE Event Stream
-       v                                             v
-+-----------------------------+       +-----------------------------+
-|    FastAPI REST Endpoints   |       |   SSE Dispatcher (/events)  |
-+--------------+--------------+       +--------------+--------------+
-               |                                     ^
-               v                                     |
-+-----------------------------+       +--------------+--------------+
-|   PostgreSQL 18 (asyncpg)   |       | Async Image Workers (Pillow)|
-+-----------------------------+       +-----------------------------+
-```
+See `package.json` for the complete dependency list and scripts.
 
-> 📖 For full architectural diagrams, component flow, and backend details, check out the [Architecture Documentation](docs/architecture.md).
+## Project layout
 
----
-
-## 🛠️ Tech Stack
-
-- **Framework**: [Angular 22](https://angular.dev/) (Standalone, SSR, Signals)
-- **Runtime & Package Manager**: [Bun](https://bun.sh/) (`1.4.0`)
-- **SSR Server**: Express 5 with `@angular/ssr` and `@angular/platform-server`
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with `@tailwindcss/postcss`
-- **Icons**: [Lucide Angular](https://lucide.dev/)
-- **Validation**: [Zod](https://zod.dev/)
-- **Image Cropper**: `@cropper/element-*`
-- **Typings**: `openapi-typescript`
-- **Unit Testing**: [Vitest](https://vitest.dev/) with JSDOM
-
----
-
-## 📁 Project Structure
-
-```
+```text
 frontend/
-├── docs/                     # Project documentation (Architecture, API guides)
-│   └── architecture.md       # Detailed system & frontend architecture (WIP)
-├── public/                   # Static assets (images, icons, robots.txt)
+├── docs/                         # Architecture documentation
+├── public/                       # Static assets
 ├── src/
 │   ├── app/
-│   │   ├── config/           # App tokens & configuration (API_URL)
-│   │   ├── constants/        # Theme and layout constants
-│   │   ├── guards/           # Route guards (authGuard)
-│   │   ├── layouts/          # Layout shells (PublicLayout, DashboardUser)
-│   │   ├── pages/            # Route pages (Root, Recetas, RecetaId, Login, Dashboard)
-│   │   ├── services/         # API services (Auth, User, Recipe, Tip, Category)
-│   │   ├── shared/           # Reusable components, schemas (Zod), and utilities
-│   │   ├── store/            # Signal-based stores (Theme store)
-│   │   ├── types/            # TypeScript definitions & generated API schemas
-│   │   ├── app.config.ts     # Client app configuration & providers
-│   │   ├── app.routes.ts     # Application route definitions
-│   │   └── app.ts            # Root application component
-│   ├── environments/         # Environment variables (dev, prod)
-│   ├── main.server.ts        # Server entry point
-│   ├── main.ts               # Browser client entry point
-│   ├── server.ts             # Express SSR server setup
-│   └── styles.css            # Global Tailwind CSS entry point
-├── angular.json              # Angular CLI project configuration
-├── package.json              # Dependencies and project scripts
-└── tsconfig.json             # TypeScript configuration
+│   │   ├── config/               # API_URL injection token
+│   │   ├── guards/               # Authentication route guard
+│   │   ├── layouts/              # Public, dashboard, user, and recipe layouts
+│   │   ├── pages/                # Public and dashboard route components
+│   │   ├── providers/            # Route-scoped WebSocket event listeners
+│   │   ├── services/             # API, auth, event, and toast services
+│   │   ├── shared/               # Components, schemas, event parsing, utilities
+│   │   ├── store/                # Signal-based theme state
+│   │   ├── types/                # API-generated and application types
+│   │   ├── app.config*.ts        # Browser and server providers
+│   │   ├── app.routes*.ts        # Browser routes and SSR render modes
+│   │   └── app.ts                # Root component
+│   ├── environments/             # Development and production API URLs
+│   ├── main.server.ts            # Angular server entry point
+│   ├── main.ts                   # Browser entry point
+│   ├── server.ts                 # Express SSR host
+│   └── styles.css                # Global styles and Tailwind entry point
+├── angular.json
+├── package.json
+└── tsconfig.json
 ```
 
----
-
-## 🚀 Getting Started
+## Getting started
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (version `^1.4.0` recommended) or [Node.js](https://nodejs.org/) (`>= 22.0.0`)
-- Running instance of the NutriUC backend API (default: `http://localhost:3000`)
+- Bun `1.4.0` (declared package manager), or Node.js `>=22` with a compatible package manager.
+- NutriUC backend API. Development defaults to `http://localhost:3000/api/v1`.
 
-### Installation
-
-Clone the repository and install dependencies using Bun:
+### Install dependencies
 
 ```bash
 bun install
 ```
 
-*(Alternatively, you can use `npm install`)*
+### Configure the API
 
-### Environment Setup
+Set `apiUrl` in `src/environments/environment.ts` for local development. Production replaces it with `src/environments/environment.prod.ts`, which currently uses the same-origin path `/api/v1`.
 
-Inspect or configure the API URL in `src/environments/environment.ts`:
+### Run the development server
 
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000/api', // Adjust to match your backend port/path
-};
+```bash
+bun run start
 ```
 
----
+The Angular development server is available at `http://localhost:4200/`.
 
-## 💻 Available Scripts
+## Scripts
 
 | Command | Description |
 |---|---|
-| `bun run start` (or `ng serve`) | Starts the development server at `http://localhost:4200/` with hot-reloading |
-| `bun run build` (or `ng build`) | Compiles the production build into the `dist/` directory |
-| `bun run watch` | Builds and watches for file changes in development mode |
-| `bun run serve:ssr` | Runs the compiled Express Server-Side Rendering (SSR) bundle |
-| `bun run test` (or `ng test`) | Runs unit tests using Vitest |
-| `bun run generate:api` | Regenerates TypeScript API definitions from the backend OpenAPI schema |
+| `bun run start` | Start the Angular development server |
+| `bun run build` | Build the application (production by default) |
+| `bun run watch` | Build and watch using the development configuration |
+| `bun run serve:ssr` | Run the built Express SSR server (`dist/frontend/server/server.mjs`) |
+| `bun run test` | Run unit tests with Angular's unit-test builder and Vitest |
+| `bun run generate:api` | Generate API types from `http://localhost:3000/openapi.json` |
 
----
+## Documentation
 
-## 🧪 Testing
-
-Unit tests are executed with [Vitest](https://vitest.dev/):
-
-```bash
-bun run test
-```
-
-To run tests with code coverage or in watch mode, configure the corresponding Vitest flags via Angular CLI.
-
----
-
-## 📄 Documentation
-
-- [Detailed Architecture & Flowcharts](docs/architecture.md)
-- [Angular Official Documentation](https://angular.dev/)
+- [Frontend architecture and Mermaid diagram](docs/architecture.md)
+- [Angular documentation](https://angular.dev/)
