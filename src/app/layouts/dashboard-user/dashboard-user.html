@@ -1,4 +1,5 @@
 <div class="flex h-screen flex-col md:flex-row md:overflow-hidden">
+  <app-sonner />
   <div class="w-full flex-none md:w-64 h-14 md:h-full">
     @if (currentUser(); as user) {
       <app-navbar-dashboard [user]="user"/>

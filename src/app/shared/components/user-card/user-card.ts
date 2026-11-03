@@ -6,7 +6,6 @@ import { LucideCalendar, LucideMail } from '@lucide/angular';
 @Component({
   imports: [UserIcon, LucideMail, LucideCalendar, DatePipe],
   selector: 'app-user-card',
-  styleUrl: './user-card.css',
   templateUrl: './user-card.html',
 })
 export class UserCard {

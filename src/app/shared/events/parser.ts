@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { KnownEvent, KnownEventSchema } from '../schemas/events';
 import { EventType } from '@app/types/events';
+import { ServerEvent } from '@app/types/api';
 
 export const UnknownEventSchema = z.object({
   event: z.string(),
@@ -58,15 +59,15 @@ export class EventParser {
     };
   }
 
-  static fromMessage(message: MessageEvent): ParsedEvent {
+  static fromMessage(message: ServerEvent): ParsedEvent {
     let data: unknown;
 
     try {
-      data = JSON.parse(message.data);
+      data = JSON.parse(message.data as string);
     } catch {
       data = message.data;
     }
 
-    return this.parse(message.type, data);
+    return this.parse(message.event, data);
   }
 }
