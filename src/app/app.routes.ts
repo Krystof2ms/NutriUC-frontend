@@ -18,6 +18,11 @@ export const routes: Routes = [
         path: 'recetas/:id',
         loadComponent: () => import('./pages/receta-id/receta-id').then((c) => c.RecetaId),
       },
+      // NUEVA RUTA: Pública Tips
+      {
+        path: 'tips',
+        loadComponent: () => import('./pages/tips/tips').then((c) => c.Tips),
+      },
     ],
   },
   {
@@ -82,6 +87,16 @@ export const routes: Routes = [
             path: 'mis-tips',
             loadComponent: () =>
               import('./pages/dashboard/user/my-tips/my-tips').then((c) => c.MyTips),
+          },
+          {
+            path: 'mis-tips/nuevo',
+            loadComponent: () =>
+              import('./pages/dashboard/user/my-tip-create/my-tip-create').then((c) => c.MyTipCreate),
+          },
+          {
+            path: 'mis-tips/:id/edit',
+            loadComponent: () =>
+              import('./pages/dashboard/user/my-tip-edit/my-tip-edit').then((c) => c.MyTipEdit),
           },
         ],
       },
