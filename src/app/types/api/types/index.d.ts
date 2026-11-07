@@ -7,3 +7,4 @@ export * from './responses';
 export * from './common';
 export * from './event';
 export * from './ping';
+export type { LoginForm } from './auth';

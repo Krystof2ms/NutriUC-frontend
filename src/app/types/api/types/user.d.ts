@@ -1,12 +1,12 @@
 import type { components, operations } from '../schema';
 
-export type BaseUser = components['schemas']['BaseUser'];
+export type BaseUser = components['schemas']['UserSummaryMe'];
 export type UserSummary = components['schemas']['UserSummary'];
 export type UserSummaryMe = components['schemas']['UserSummaryMe'];
 export type UserCreate = components['schemas']['UserCreate'];
 export type UserUpdate = components['schemas']['UserUpdate'];
 export type UserAvatarUpdate =
-  components['schemas']['Body_updateAvatar_api_v1_users_me_avatar_put'];
+  components['schemas']['Body_update_avatar_api_v1_users_me_avatar_put'];
 export type LoginForm = components['schemas']['LoginForm'];
 export type UserStats = components['schemas']['UserStats'];
 
@@ -26,12 +26,12 @@ export type UserUpdateMeResponses = UserUpdateMeApi['responses'];
 export type UserUpdateMeResponse = UserUpdateMeResponses[keyof UserUpdateMeResponses];
 
 /* /users/me/avatar */
-export type UserUpdateAvatarApi = operations['updateAvatar_api_v1_users_me_avatar_put'];
+export type UserUpdateAvatarApi = operations['update_avatar_api_v1_users_me_avatar_put'];
 export type UserUpdateAvatarResponses = UserUpdateAvatarApi['responses'];
 export type UserUpdateAvatarResponse = UserUpdateAvatarResponses[keyof UserUpdateAvatarResponses];
 
 /* /users/me/avatar */
-export type UserDeleteAvatarApi = operations['deleteAvatar_api_v1_users_me_avatar_delete'];
+export type UserDeleteAvatarApi = operations['delete_avatar_api_v1_users_me_avatar_delete'];
 export type UserDeleteAvatarResponses = UserDeleteAvatarApi['responses'];
 export type UserDeleteAvatarResponse = UserDeleteAvatarResponses[keyof UserDeleteAvatarResponses];
 

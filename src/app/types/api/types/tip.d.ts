@@ -8,12 +8,12 @@ export type CursorPageTipDTO = CursorPage<TipDTO>;
 export type TipCursorPage = CursorPageTipDTO;
 
 /* /tips/search */
-export type TipSearchApi = operations['findDTO_api_v1_tips_search_get'];
+export type TipSearchApi = operations['find_dto_api_v1_tips_search_get'];
 export type TipSearchResponses = TipSearchApi['responses'];
 export type TipSearchResponse = TipSearchResponses[keyof TipSearchResponses];
 
 /* /tips/tip/{id} */
-export type TipGetByIdApi = operations['findId_api_v1_tips_tip__id__get'];
+export type TipGetByIdApi = operations['find_id_api_v1_tips_tip__id__get'];
 export type TipGetByIdResponses = TipGetByIdApi['responses'];
 export type TipGetByIdResponse = TipGetByIdResponses[keyof TipGetByIdResponses];
 
