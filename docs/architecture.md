@@ -1,99 +1,147 @@
-# NutriUC - Architecture & System Design
+# NutriUC Frontend Architecture
 
 > [!NOTE]
-> **Project Status: Work in Progress (WIP)**  
-> This documentation reflects the current and evolving architecture of NutriUC. Both the frontend and backend systems are actively under development.
+> **Work in progress:** this document describes the frontend implementation in this repository. Backend internals are outside its scope.
 
----
+## Overview
 
-## 1. System Overview
+The frontend is an Angular 22 application built from standalone, lazy-loaded route components. It uses Angular Signals for local and shared reactive state, RxJS for HTTP and event streams, and generated TypeScript definitions from the backend OpenAPI schema.
 
-**NutriUC** is a health, nutrition, and recipe management web platform. This repository hosts the **Frontend Web Application**, built with Angular 22 (SSR + Client Hydration), communicating with a FastAPI asynchronous backend.
+The application is hosted by Express through Angular SSR. The server prerenders `/` and `/login`; the wildcard server route uses client rendering. Browser and server providers are merged in `app.config.server.ts`. The API base URL is provided through the `API_URL` injection token: development uses `http://localhost:3000/api/v1`, while production uses `/api/v1`.
 
-The architecture decouples the responsive user interface from heavy computational tasks (such as image resizing, optimization, and conversion to WebP) by utilizing background worker queues and real-time Server-Sent Events (SSE) to update the client asynchronously.
+## Frontend architecture diagram
 
----
+```mermaid
+flowchart TD
+    Browser["Browser / NutriUC UI"]
 
-## 2. End-to-End Architecture
+    subgraph Frontend["NutriUC Frontend"]
+        subgraph Presentation["Angular application"]
+            Public["Public routes<br/>/ · /recetas · /recetas/:id"]
+            Login["Login route<br/>/login"]
+            Dashboard["Dashboard routes<br/>/dashboard/user/*"]
+            Guard["authGuard<br/>ensure current user"]
+            Shared["Shared UI<br/>forms · cropper · navigation · theme · toast"]
+        end
 
-Below is the global architecture flow connecting the client frontend, the FastAPI runtime, the background queue/worker subsystem, and persistent storage:
+        subgraph ClientArchitecture["Application services and state"]
+            Auth["AuthService<br/>cookie-based session"]
+            UserService["UserService<br/>getStats · updateData · updateAvatarBlob"]
+            RecipeService["RecipeService<br/>search · getById · create · updateRecipe<br/>updateImage · deleteImage · delete"]
+            TipService["TipService<br/>search · create · update · delete"]
+            CategoryService["CategoryService<br/>getNames"]
+            Normalize["normalizeApi<br/>typed result and error handling"]
+            EventService["EventService<br/>RxJS WebSocket client"]
+            EventManager["EventManager<br/>parse, validate, dispatch"]
+            subgraph EventChannels["Event channels (Subject / Observable)"]
+                UserChannel["UserEventChannel"]
+                RecipeChannel["RecipeEventChannel"]
+                ServerChannel["ServerEventChannel"]
+                UnknownChannel["UnknownEventChannel"]
+            end
+            subgraph EventListeners["Route-scoped event listeners"]
+                UserListener["UserEventListener"]
+                RecipeListener["RecipeEventListener"]
+            end
+            ToastService["ToastService<br/>success · error · info · warning<br/>loading · dismiss (ngx-sonner)"]
+            State["Signals<br/>auth status · current user · theme"]
+            ApiTypes["Generated OpenAPI types<br/>and Zod schemas"]
+        end
 
----
+        subgraph Hosting["SSR hosting and rendering"]
+            Express["Express 5 SSR host"]
+            SSR["Angular SSR engine"]
+            RenderModes["Prerender: /, /login<br/>Client render: wildcard"]
+        end
+    end
 
-## 4. Frontend Architecture (Focus)
+    Backend["NutriUC backend API<br/>REST /api/v1"]
+    Socket["Backend WebSocket<br/>/events/connect"]
 
-The frontend is built on **Angular 22** with Server-Side Rendering (SSR) via Express and Client Hydration, designed around modern standalone components and fine-grained reactivity using Angular Signals.
-
-### 4.1 Layered Architecture
-
+    Browser --> Public
+    Browser --> Login
+    Browser --> Dashboard
+    Dashboard --> Guard
+    Dashboard --> Shared
+    Public --> Shared
+    Login --> Auth
+    Guard <--> Auth
+    Auth --> State
+    Auth --> UserService
+    Dashboard <--> UserService
+    Dashboard <--> RecipeService
+    Dashboard <--> TipService
+    Public <--> RecipeService
+    Public <--> CategoryService
+    UserService --> Normalize
+    RecipeService --> Normalize
+    TipService --> Normalize
+    Normalize --> ApiTypes
+    UserService <--> Backend
+    RecipeService <--> Backend
+    TipService <--> Backend
+    CategoryService <--> Backend
+    Auth <--> Backend
+    Dashboard --> EventService
+    EventService --> EventManager
+    EventManager --> ApiTypes
+    EventManager --> UserChannel
+    EventManager --> RecipeChannel
+    EventManager --> ServerChannel
+    EventManager --> UnknownChannel
+    UserChannel --> UserListener
+    RecipeChannel --> RecipeListener
+    UserListener --> ToastService
+    RecipeListener --> ToastService
+    ToastService --> Shared
+    EventService <-->|"WebSocket events"| Socket
+    Browser --> Express
+    Express --> SSR
+    SSR --> RenderModes
+    RenderModes --> Public
+    RenderModes --> Login
+    RenderModes --> Dashboard
 ```
-src/
-├── app/
-│   ├── config/              # Injection tokens and runtime configs (API_URL)
-│   ├── constants/           # Static theme, UI, and domain constants
-│   ├── guards/              # Route protection and authorization checks (authGuard)
-│   ├── layouts/             # Structural shell layouts (PublicLayout, DashboardUser)
-│   ├── pages/               # Feature route pages (Public & Dashboard)
-│   ├── services/            # API integration & business logic (Auth, User, Recipe, Tip, Category)
-│   ├── shared/              # Reusable components, Zod schemas, utilities
-│   ├── store/               # Lightweight signal-based application state (Theme store)
-│   ├── types/               # Generated OpenAPI schema types, HTTP types, auth models
-│   ├── app.config.ts        # Client application providers (HTTP, routing, hydration)
-│   ├── app.config.server.ts # Server-side application configuration
-│   ├── app.routes.ts        # Client routing configuration
-│   └── app.ts               # Root component
-├── environments/            # Environment configurations (API endpoints, dev/prod flags)
-└── server.ts                # Express SSR server bootstrap
-```
 
-### 4.2 Key Architectural Patterns
+## Main building blocks
 
-#### 1. Reactivity with Angular Signals
-The frontend leverages native Angular signals (`signal`, `computed`, `effect`) rather than heavy global state libraries.
-- **Auth State**: `AuthService` exposes `currentUser = signal<UserSummaryMe | null>(null)` and derived computed signals (`isAuthenticated`).
-- **Theme State**: `themeStore` dynamically tracks and updates dark/light preferences, updating DOM classes reactively.
-- **Data Conversion**: Helper functions like `toDefaultSignal` bridge asynchronous RxJS observables into predictable signals with default fallback states.
+### Routing and rendering
 
-#### 2. Strongly Typed API Communication
-- API types are generated directly from the backend's OpenAPI specification (`openapi-typescript`), guaranteeing complete type safety across endpoints.
-- Custom normalization wrapper (`normalizeApi`) encapsulates HTTP responses and standardizes success/error structures (`ApiError<T>`), avoiding unhandled client-side runtime errors.
-- Authentication relies on secure HTTP-only cookies (`withCredentials: true`), preserving security tokens without exposing JWTs to JavaScript storage (`localStorage` / `sessionStorage`).
+- Public pages are grouped under `PublicLayout`: home, recipe search, and recipe detail.
+- `/login` is a standalone route.
+- `/dashboard/user/*` is protected by `authGuard` at the dashboard parent and child route levels. The guard calls `AuthService.ensureCurrentUser()` and redirects unauthenticated users to `/login`.
+- Dashboard child pages cover the user home, profile and profile editing, personal creations, recipe listing/creation/detail/editing, and tips.
+- Route components are loaded lazily. User and recipe event listeners are provided at their corresponding route scopes.
+- `app.routes.server.ts` prerenders only the root and login routes. Other URLs use `RenderMode.Client`.
 
-#### 3. Cursor-Based (Keyset) Pagination
-Endpoints displaying high-volume datasets (such as `/recipes` and `/tips`) employ keyset pagination (`cursor`, `dir`, `limit`). The frontend services seamlessly manage directional pagination forward and backward without offset performance degradation.
+### API and authentication
 
-#### 4. Media Cropping & Client Pre-processing
-Avatar and recipe image uploads integrate modern web-component cropping (`@cropper/element-*`). The user crops and previews the image on the client before submitting, matching the backend worker's expected dimensions and WebP transformation requirements.
+- `API_URL` is injected into `AuthService`, `UserService`, `RecipeService`, `TipService`, and `CategoryService`.
+- API request and response types are derived from the generated OpenAPI schema in `src/app/types/api/schema.d.ts`.
+- `normalizeApi` converts HTTP success and error outcomes into a typed result shape for API services.
+- Authenticated calls opt into `withCredentials: true`; the frontend relies on HTTP-only cookies and does not keep JWTs in browser storage.
+- Recipe and tip search accept cursor, direction, limit, name, category, and optional `mine` parameters. Image and avatar uploads use `FormData`; recipe/avatar cropping is handled in the browser with Cropper.js elements.
 
-#### 5. Real-Time Server-Sent Events (SSE) Integration
-The client establishes a resilient connection to `/events/events`. When asynchronous background workers finish optimizing user avatars or recipe images, the frontend receives immediate updates and refreshes the reactive image keys in the UI without requiring full page reloads.
+### WebSocket events
 
-#### 6. Route-Level Separation & Guards
-- **Public Space**: Fast, SSR-rendered pages (`/`, `/recetas`, `/recetas/:id`) accessible to search engines and unauthenticated visitors.
-- **Protected User Dashboard**: Guarded by `authGuard` ensuring authenticated sessions before resolving child routes (`/dashboard/user/*`). Nested routes provide profile management, personal creations, recipe editing, and health tips.
+The dashboard layout connects `EventService` on construction and disconnects it when destroyed. The service derives `/events/connect` from `API_URL`, switches the URL scheme from HTTP(S) to WS(S), and consumes messages with `rxjs/webSocket`. `EventManager` parses and validates each message, then dispatches to `UserEventChannel`, `RecipeEventChannel`, `ServerEventChannel`, or `UnknownEventChannel`. Each channel is an observable event stream. Route-scoped user and recipe listeners subscribe to their channels and use `ToastService` (a `ngx-sonner` wrapper) to display image update or rejection feedback. The current diagram shows the server and unknown channels even though no route listener for them is registered here.
 
----
+### State and shared UI
 
-## 5. Technology Stack Summary
+Angular Signals hold authentication status, the current user, theme state, and event connection status. Shared components provide navigation, recipe cards and forms, image cropping, theme selection, and toast notifications. Zod schemas validate event and domain data at runtime where used.
 
-| Domain | Technology / Tool | Version / Details |
-|---|---|---|
-| **Framework** | Angular | `^22.1.0` (Signals, Standalone, Hydration) |
-| **SSR Engine** | Angular SSR + Express | Express `^5.1.0`, `@angular/ssr` |
-| **Package Manager** | Bun | `1.4.0` |
-| **Styling** | Tailwind CSS | `^4.1.12` with `@tailwindcss/postcss` |
-| **Icons** | Lucide Angular | `^1.48.0` |
-| **Schema Validation**| Zod | `^4.6.5` |
-| **Media Handling** | Cropper.js Web Elements | `@cropper/element-*` `^2.3.1` |
-| **API Typings** | OpenAPI TypeScript | `^7.13.0` |
-| **Testing** | Vitest + JSDOM | `^4.0.8` |
-| **Backend API** | FastAPI / Python | Keyset search, async worker queue, SSE |
-| **Database** | PostgreSQL | Version 18 with asyncpg pool |
+## Runtime and dependencies
 
----
+| Area                     | Current dependency/configuration                                    |
+| ------------------------ | ------------------------------------------------------------------- |
+| Angular                  | Angular packages `^22.1.0`; CLI/build `^22.1.6`                     |
+| SSR                      | `@angular/ssr` `^22.2.0`, Express `^5.1.0`                          |
+| HTTP and reactivity      | Angular `HttpClient`, RxJS `~7.8.0`; WebSocket via `rxjs/webSocket` |
+| Styles                   | Tailwind CSS `^4.1.12`, `@tailwindcss/postcss` `^4.1.12`            |
+| UI                       | `@lucide/angular` `^1.48.0`, `ngx-sonner` `^3.1.0`                  |
+| Cropper                  | `@cropper/element-*` packages `^2.3.1`                              |
+| Validation and API types | Zod `^4.6.5`, `openapi-typescript` `^7.13.0`                        |
+| Package manager          | Bun `1.4.0`                                                         |
+| Unit testing             | Vitest `^4.0.8`, JSDOM `^28.0.0`, Angular unit-test builder         |
 
-## 6. Current Roadmap (WIP)
-
-As the project is currently in progress, future architecture iterations will focus on:
-- [ ] Completing end-to-end SSE event handling in the user dashboard.
-- [ ] Expanding recipe creation forms with dynamic nutritional calculation helpers.
+Refer to `package.json` and `angular.json` for the full dependency list and build configuration.
