@@ -62,8 +62,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Finddto */
-        get: operations["findDTO_api_v1_recipes_search_get"];
+        /** Find Dto */
+        get: operations["find_dto_api_v1_recipes_search_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -79,8 +79,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Findid */
-        get: operations["findId_api_v1_recipes_recipe__id__get"];
+        /** Find Id */
+        get: operations["find_id_api_v1_recipes_recipe__id__get"];
         put?: never;
         post?: never;
         /** Delete */
@@ -98,13 +98,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Getimage */
-        get: operations["getImage_api_v1_recipes_recipe__id__img_get"];
-        /** Updateavatar */
-        put: operations["updateAvatar_api_v1_recipes_recipe__id__img_put"];
+        /** Get Image */
+        get: operations["get_image_api_v1_recipes_recipe__id__img_get"];
+        /** Update Image */
+        put: operations["update_image_api_v1_recipes_recipe__id__img_put"];
         post?: never;
-        /** Deleteavatar */
-        delete: operations["deleteAvatar_api_v1_recipes_recipe__id__img_delete"];
+        /** Delete Image */
+        delete: operations["delete_image_api_v1_recipes_recipe__id__img_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -134,8 +134,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Finddto */
-        get: operations["findDTO_api_v1_tips_search_get"];
+        /** Find Dto */
+        get: operations["find_dto_api_v1_tips_search_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -151,8 +151,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Findid */
-        get: operations["findId_api_v1_tips_tip__id__get"];
+        /** Find Id */
+        get: operations["find_id_api_v1_tips_tip__id__get"];
         put?: never;
         post?: never;
         /** Delete */
@@ -223,11 +223,11 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Updateavatar */
-        put: operations["updateAvatar_api_v1_users_me_avatar_put"];
+        /** Update Avatar */
+        put: operations["update_avatar_api_v1_users_me_avatar_put"];
         post?: never;
-        /** Deleteavatar */
-        delete: operations["deleteAvatar_api_v1_users_me_avatar_delete"];
+        /** Delete Avatar */
+        delete: operations["delete_avatar_api_v1_users_me_avatar_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -274,25 +274,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Getnames */
-        get: operations["getNames_api_v1_categories_names_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/events/events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Events Endpoint */
-        get: operations["events_endpoint_api_v1_events_events_get"];
+        /** Get Names */
+        get: operations["get_names_api_v1_categories_names_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -329,15 +312,15 @@ export interface components {
             /** Role */
             role: string;
         };
-        /** Body_updateAvatar_api_v1_recipes_recipe__id__img_put */
-        Body_updateAvatar_api_v1_recipes_recipe__id__img_put: {
-            /** Image */
-            image: string;
-        };
-        /** Body_updateAvatar_api_v1_users_me_avatar_put */
-        Body_updateAvatar_api_v1_users_me_avatar_put: {
+        /** Body_update_avatar_api_v1_users_me_avatar_put */
+        Body_update_avatar_api_v1_users_me_avatar_put: {
             /** Avatar */
             avatar: string;
+        };
+        /** Body_update_image_api_v1_recipes_recipe__id__img_put */
+        Body_update_image_api_v1_recipes_recipe__id__img_put: {
+            /** Image */
+            image: string;
         };
         /**
          * CategoryType
@@ -740,7 +723,7 @@ export interface operations {
             };
         };
     };
-    findDTO_api_v1_recipes_search_get: {
+    find_dto_api_v1_recipes_search_get: {
         parameters: {
             query?: {
                 name?: string | null;
@@ -806,7 +789,7 @@ export interface operations {
             };
         };
     };
-    findId_api_v1_recipes_recipe__id__get: {
+    find_id_api_v1_recipes_recipe__id__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -972,7 +955,7 @@ export interface operations {
             };
         };
     };
-    getImage_api_v1_recipes_recipe__id__img_get: {
+    get_image_api_v1_recipes_recipe__id__img_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1010,7 +993,7 @@ export interface operations {
             };
         };
     };
-    updateAvatar_api_v1_recipes_recipe__id__img_put: {
+    update_image_api_v1_recipes_recipe__id__img_put: {
         parameters: {
             query?: never;
             header?: never;
@@ -1024,7 +1007,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["Body_updateAvatar_api_v1_recipes_recipe__id__img_put"];
+                "multipart/form-data": components["schemas"]["Body_update_image_api_v1_recipes_recipe__id__img_put"];
             };
         };
         responses: {
@@ -1057,7 +1040,7 @@ export interface operations {
             };
         };
     };
-    deleteAvatar_api_v1_recipes_recipe__id__img_delete: {
+    delete_image_api_v1_recipes_recipe__id__img_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -1154,7 +1137,7 @@ export interface operations {
             };
         };
     };
-    findDTO_api_v1_tips_search_get: {
+    find_dto_api_v1_tips_search_get: {
         parameters: {
             query?: {
                 name?: string | null;
@@ -1220,7 +1203,7 @@ export interface operations {
             };
         };
     };
-    findId_api_v1_tips_tip__id__get: {
+    find_id_api_v1_tips_tip__id__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1576,7 +1559,7 @@ export interface operations {
             };
         };
     };
-    updateAvatar_api_v1_users_me_avatar_put: {
+    update_avatar_api_v1_users_me_avatar_put: {
         parameters: {
             query: {
                 x: number;
@@ -1592,7 +1575,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["Body_updateAvatar_api_v1_users_me_avatar_put"];
+                "multipart/form-data": components["schemas"]["Body_update_avatar_api_v1_users_me_avatar_put"];
             };
         };
         responses: {
@@ -1616,7 +1599,7 @@ export interface operations {
             };
         };
     };
-    deleteAvatar_api_v1_users_me_avatar_delete: {
+    delete_avatar_api_v1_users_me_avatar_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -1710,7 +1693,7 @@ export interface operations {
             };
         };
     };
-    getNames_api_v1_categories_names_get: {
+    get_names_api_v1_categories_names_get: {
         parameters: {
             query?: {
                 only_type?: components["schemas"]["CategoryType"] | null;
@@ -1728,38 +1711,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": string[];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    events_endpoint_api_v1_events_events_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: {
-                refresh_token?: string | null;
-                access_token?: string | null;
-            };
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */
