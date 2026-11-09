@@ -1,19 +1,24 @@
 @reference "#styles.css";
 
 .field-group {
-  @apply space-y-2 flex flex-col;
+  @apply flex flex-col space-y-2;
 }
 
 .field-group > label {
   @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
 }
 
+.field-group input,
+.field-group select {
+  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+}
+
 .field-group input {
-  @apply flex h-10 w-full rounded-md border-input border-1.5 bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground disabled:opacity-50 md:text-sm;
+  @apply placeholder:text-muted-foreground;
 }
 
 .field-group select {
-  @apply flex h-10 w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+  @apply appearance-none;
 }
 
 .field-group select option {
@@ -25,34 +30,13 @@
 }
 
 .btn-add {
-  @apply flex gap-2 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors border-input border-1.5 bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3;
+  @apply flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground;
 }
 
 .btn-delete {
-  @apply py-0.5 px-2 text-red-800 rounded-md;
+  @apply rounded-md px-2 py-0.5 text-red-800 hover:bg-muted disabled:text-muted-foreground;
 }
-
-
-.btn-delete:hover {
-  @apply bg-muted text-red-800;
-}
-
-.btn-delete:disabled {
-  @apply text-muted-foreground;
-}
-
 
 .input-image {
-  @apply block w-full rounded-lg border border-input
-      bg-field text-sm text-foreground
-      file:mr-4 file:cursor-pointer
-      hover:file:bg-accent
-      focus-visible:outline-none
-      focus-visible:ring-2 focus-visible:ring-ring
-      focus-visible:ring-offset-2;
+  @apply block w-full rounded-lg border border-input bg-field text-sm text-foreground file:mr-4 file:cursor-pointer file:border-0 file:border-r file:border-input file:bg-muted file:px-4 file:py-2 file:font-medium file:text-accent-foreground hover:file:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
 }
-
-.input-image::file-selector-button {
-  @apply border-0 border-r border-input bg-muted px-4 py-2
-      font-medium text-accent-foreground;
-}/*  */
