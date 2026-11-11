@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth/auth-guard';
+import { RecipeEventListener, UserEventListener } from './providers/event-listener';
+import { RecipeLayout } from './layouts/recipe/recipe';
+import { UserLayout } from './layouts/user/user';
 
 export const routes: Routes = [
   {
@@ -46,13 +49,22 @@ export const routes: Routes = [
           },
           {
             path: 'perfil',
-            loadComponent: () =>
-              import('./pages/dashboard/user/profile/profile').then((c) => c.Profile),
-          },
-          {
-            path: 'perfil/edit',
-            loadComponent: () =>
-              import('./pages/dashboard/user/profile-edit/profile-edit').then((c) => c.ProfileEdit),
+            providers: [UserEventListener],
+            component: UserLayout,
+            children: [
+              {
+                path: '',
+                loadComponent: () =>
+                  import('./pages/dashboard/user/profile/profile').then((c) => c.Profile),
+              },
+              {
+                path: 'edit',
+                loadComponent: () =>
+                  import('./pages/dashboard/user/profile-edit/profile-edit').then(
+                    (c) => c.ProfileEdit,
+                  ),
+              },
+            ],
           },
           {
             path: 'creaciones',
@@ -61,27 +73,34 @@ export const routes: Routes = [
           },
           {
             path: 'mis-recetas',
-            loadComponent: () =>
-              import('./pages/dashboard/user/my-recipes/my-recipes').then((c) => c.MyRecipes),
-          },
-          {
-            path: 'mis-recetas/new',
-            loadComponent: () =>
-              import('./pages/dashboard/user/my-recipe-create/my-recipe-create').then(
-                (c) => c.MyRecipeCreate,
-              ),
-          },
-          {
-            path: 'mis-recetas/:id',
-            loadComponent: () =>
-              import('./pages/dashboard/user/my-recipe/my-recipe').then((c) => c.MyRecipe),
-          },
-          {
-            path: 'mis-recetas/:id/edit',
-            loadComponent: () =>
-              import('./pages/dashboard/user/my-recipe-edit/my-recipe-edit').then(
-                (c) => c.MyRecipeEdit,
-              ),
+            providers: [RecipeEventListener],
+            component: RecipeLayout,
+            children: [
+              {
+                path: '',
+                loadComponent: () =>
+                  import('./pages/dashboard/user/my-recipes/my-recipes').then((c) => c.MyRecipes),
+              },
+              {
+                path: 'new',
+                loadComponent: () =>
+                  import('./pages/dashboard/user/my-recipe-create/my-recipe-create').then(
+                    (c) => c.MyRecipeCreate,
+                  ),
+              },
+              {
+                path: ':id',
+                loadComponent: () =>
+                  import('./pages/dashboard/user/my-recipe/my-recipe').then((c) => c.MyRecipe),
+              },
+              {
+                path: ':id/edit',
+                loadComponent: () =>
+                  import('./pages/dashboard/user/my-recipe-edit/my-recipe-edit').then(
+                    (c) => c.MyRecipeEdit,
+                  ),
+              },
+            ],
           },
           {
             path: 'mis-tips',

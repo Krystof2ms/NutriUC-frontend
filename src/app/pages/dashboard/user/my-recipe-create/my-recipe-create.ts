@@ -21,8 +21,6 @@ export class MyRecipeCreate {
   categories = toSignal(this.categoryService.getNames('recipe'), { initialValue: [] });
 
   async onSubmit(form: RecipeSubmit) {
-    console.log(form);
-
     try {
       if (!form.recipe) return;
       const resultCreated = await firstValueFrom(this.recipeService.create(form.recipe));
