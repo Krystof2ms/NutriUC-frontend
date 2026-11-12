@@ -1,16 +1,25 @@
-<div class="flex flex-col sm:flex-row gap-4 mb-8 bg-card p-4 rounded-xl card-shadow border border-border">
-  <input 
-    type="text" 
-    [(ngModel)]="searchQuery" 
-    (keyup.enter)="onSearch()" 
-    [placeholder]="placeholder()" 
-    class="flex-grow p-2 rounded-md border border-border bg-background"
-  >
-  <select [(ngModel)]="selectedCategory" (change)="onSearch()" class="p-2 rounded-md border border-border bg-background sm:w-48">
-    <option value="">Todas las categorías</option>
-    @for (cat of categories(); track cat) {
-      <option [value]="cat">{{ cat }}</option>
-    }
-  </select>
-  <button (click)="onSearch()" class="bg-primary text-primary-foreground px-6 py-2 rounded-md hover:opacity-90 transition effect-clicked">Buscar</button>
-</div>
+<section class="max-w-6xl mx-auto px-6 relative z-10">
+  <div class="bg-card rounded-2xl card-shadow p-6 flex flex-col md:flex-row gap-4 items-start md:items-center">
+    <div class="relative flex-1 w-full">
+      <svg lucideSearch class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4" />
+      <input type="text" placeholder="Buscar receta por nombre..." maxLength="100" [value]="currentSearch()"
+        (input)="debounceSearch($event.target.value)"
+        class="w-full pl-11 pr-4 py-3 rounded-xl bg-muted placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow"
+        (keydown.enter)="onEnter()" />
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <svg lucideFunnel class="text-muted-foreground hidden md:block w-4" />
+      <button (click)="setCategory(null)" [class]="'px-4 py-2 rounded-xl text-sm font-medium transition-colors effect-clicked ' + (!currentCategory() ? 'bg-primary text-primary-foreground hover:inset-shadow-sm hover:inset-shadow-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-accent')">
+        Todos
+      </button>
+
+      @for (cat of categories(); track $index) {
+      <button (click)="setCategory(cat)"
+        [class]="'px-4 py-2 rounded-xl text-sm font-medium transition-colors effect-clicked ' + (currentCategory() === cat ? 'bg-primary text-primary-foreground hover:inset-shadow-sm hover:inset-shadow-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-accent')">
+        {{ cat }}
+      </button>
+      }
+    </div>
+  </div>
+</section>
