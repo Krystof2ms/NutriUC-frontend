@@ -7,9 +7,10 @@ import {
   TipCreate,
   TipCreateResponses,
   TipDeleteResponses,
+  TipDTO,
   TipSearchResponses,
   TipUpdate,
-  TipUpdateResponses,
+  TipUpdateResponses
 } from '@api/index';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
@@ -20,6 +21,7 @@ type GetSearchErrors = ApiError<ErrorResponseMap<TipSearchResponses>>;
 type PatchUpdateErrors = ApiError<ErrorResponseMap<TipUpdateResponses>>;
 type PostCreateErrors = ApiError<ErrorResponseMap<TipCreateResponses>>;
 type DeleteErrors = ApiError<ErrorResponseMap<TipDeleteResponses>>;
+type GetByIdErrors = ApiError<object>;
 
 @Service()
 export class TipService {
@@ -36,31 +38,23 @@ export class TipService {
   ) {
     let params = new HttpParams().set('limit', limit);
 
-    if (name !== undefined) {
-      params = params.set('name', name);
-    }
-
-    if (category !== undefined) {
-      params = params.set('category', category);
-    }
-
-    if (cursor !== undefined) {
-      params = params.set('cursor', cursor);
-    }
-
-    if (direction !== undefined) {
-      params = params.set('dir', direction);
-    }
-
-    if (mine) {
-      params = params.set('mine', mine);
-    }
+    if (name !== undefined) params = params.set('name', name);
+    if (category !== undefined) params = params.set('category', category);
+    if (cursor !== undefined) params = params.set('cursor', cursor);
+    if (direction !== undefined) params = params.set('dir', direction);
+    if (mine) params = params.set('mine', mine);
 
     return normalizeApi<CursorPageTipDTO, GetSearchErrors>(
       this.http.get<CursorPageTipDTO>(`${this.apiUrl}/search`, {
         params,
         withCredentials: mine,
       }),
+    );
+  }
+
+  getById(id: number) {
+    return normalizeApi<TipDTO, GetByIdErrors>(
+      this.http.get<TipDTO>(`${this.apiUrl}/tip/${id}`, { withCredentials: true }),
     );
   }
 
@@ -72,7 +66,7 @@ export class TipService {
 
   create(data: TipCreate) {
     return normalizeApi<MessageResponse, PostCreateErrors>(
-      this.http.patch<MessageResponse>(`${this.apiUrl}/tip`, data, { withCredentials: true }),
+      this.http.post<MessageResponse>(`${this.apiUrl}/tip`, data, { withCredentials: true }),
     );
   }
 
