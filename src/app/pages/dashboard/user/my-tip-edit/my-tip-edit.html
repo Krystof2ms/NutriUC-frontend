@@ -1,0 +1,17 @@
+<div class="p-6 max-w-3xl mx-auto w-full">
+  <h1 class="text-3xl font-bold mb-6">Editar Tip</h1>
+  <div class="bg-card rounded-xl p-6 border border-border card-shadow">
+    @if (tipData()) {
+      <app-form-tip
+        [initialData]="tipData()"
+        [categories]="categories()"
+        [isLoading]="isLoading()"
+        (submitTip)="updateTip($event)"
+      />
+    } @else {
+      <div class="flex justify-center p-8 animate-pulse">
+        <span class="text-muted-foreground">Cargando datos...</span>
+      </div>
+    }
+  </div>
+</div>
