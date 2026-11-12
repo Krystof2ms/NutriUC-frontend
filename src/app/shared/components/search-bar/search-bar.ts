@@ -1,25 +1,35 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { LucideFunnel, LucideSearch } from '@lucide/angular';
 import { CategoryType } from '@api/index';
 import { CategoryService } from '@app/services/category/category';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, skip, switchMap } from 'rxjs';
+import { form, FormField, FormRoot } from '@angular/forms/signals';
+
+type Form = {
+  search: string;
+  category: string;
+};
 
 @Component({
-  imports: [LucideFunnel, LucideSearch],
+  imports: [LucideFunnel, LucideSearch, FormField, FormRoot],
   selector: 'app-search-bar',
   templateUrl: './search-bar.html',
 })
 export class SearchBar {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-
   private readonly categoryService = inject(CategoryService);
 
   readonly categories_type = input.required<CategoryType>();
 
-  private searchSubject = new Subject<string | null>();
+  private readonly filters = signal<Form>({
+    search: this.route.snapshot.queryParamMap.get('search') ?? '',
+    category: this.route.snapshot.queryParamMap.get('category') ?? '',
+  });
+
+  readonly searchForm = form(this.filters);
 
   readonly categories = toSignal(
     toObservable(this.categories_type).pipe(
@@ -43,24 +53,35 @@ export class SearchBar {
   });
 
   constructor() {
-    this.searchSubject.pipe(debounceTime(400), distinctUntilChanged()).subscribe((search) => {
-      this.setSearch(search);
+    effect(() => {
+      const params = this.queryParams();
+
+      this.filters.set({
+        search: params.get('search') ?? '',
+        category: params.get('category') ?? '',
+      });
     });
-  }
 
-  debounceSearch(search: string | null) {
-    const result = search?.trim() || null;
+    // Debounce de búsqueda
+    const searchValue = computed(() => this.filters().search);
 
-    this.searchSubject.next(result);
+    toObservable(searchValue)
+      .pipe(
+        map((search) => search.trim() || null),
+        debounceTime(400),
+        distinctUntilChanged(),
+        skip(1),
+      )
+      .subscribe((search) => this.setSearch(search));
   }
 
   setSearch(search: string | null) {
-    const result = search?.length ? search : null;
+    const parseSearch = search?.trim() || '';
 
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        search: result,
+        search: parseSearch.length ? parseSearch : null,
         cursor: null,
         dir: null,
       },
@@ -72,7 +93,7 @@ export class SearchBar {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        category: category,
+        category,
         cursor: null,
         dir: null,
       },
@@ -81,35 +102,47 @@ export class SearchBar {
   }
 
   setFilters(search: string | null, category: string | null) {
+    const parseSearch = search?.trim() || '';
+    const parseCategory = category ?? '';
+
+    this.filters.set({
+      search: parseSearch,
+      category: parseCategory,
+    });
+
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        search: search || null,
-        category: category || null,
+        search: parseSearch.length ? parseSearch : null,
+        category: parseCategory.length ? parseCategory : null,
+        cursor: null,
+        dir: null,
       },
       queryParamsHandling: 'merge',
     });
   }
 
   clearFilters() {
+    this.filters.set({
+      search: '',
+      category: '',
+    });
+
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
         search: null,
         category: null,
+        cursor: null,
+        dir: null,
       },
       queryParamsHandling: 'merge',
     });
   }
 
   onEnter() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        search: this.currentSearch(),
-        category: this.currentCategory(),
-      },
-      queryParamsHandling: 'merge',
-    });
+    const { search, category } = this.filters();
+
+    this.setFilters(search, category);
   }
 }

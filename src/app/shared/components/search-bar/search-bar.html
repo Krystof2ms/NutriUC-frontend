@@ -1,25 +1,37 @@
-<section class="max-w-6xl mx-auto px-6 relative z-10">
-  <div class="bg-card rounded-2xl card-shadow p-6 flex flex-col md:flex-row gap-4 items-start md:items-center">
+<form class="max-w-6xl mx-auto px-6 relative z-10" [formRoot]="searchForm">
+  <div
+    class="bg-card rounded-2xl card-shadow p-6 flex flex-col md:flex-row gap-4 items-start md:items-center"
+  >
     <div class="relative flex-1 w-full">
-      <svg lucideSearch class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4" />
-      <input type="text" placeholder="Buscar receta por nombre..." maxLength="100" [value]="currentSearch()"
-        (input)="debounceSearch($event.target.value)"
+      <svg
+        lucideSearch
+        class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground w-4"
+      />
+      <input
+        type="search"
+        placeholder="Buscar receta por nombre..."
+        [formField]="searchForm.search"
         class="w-full pl-11 pr-4 py-3 rounded-xl bg-muted placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow"
-        (keydown.enter)="onEnter()" />
+        (keydown.enter)="onEnter()"
+      />
     </div>
 
-    <div class="flex items-center gap-2 flex-wrap">
-      <svg lucideFunnel class="text-muted-foreground hidden md:block w-4" />
-      <button (click)="setCategory(null)" [class]="'px-4 py-2 rounded-xl text-sm font-medium transition-colors effect-clicked ' + (!currentCategory() ? 'bg-primary text-primary-foreground hover:inset-shadow-sm hover:inset-shadow-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-accent')">
-        Todos
-      </button>
+    <div class="flex items-center gap-2">
+      <svg lucideFunnel class="text-muted-foreground hidden md:block w-6" />
+      <select
+        id="category"
+        [formField]="searchForm.category"
+        class="block w-full px-3 py-2.5 bg-field text-foreground border border-border rounded-xl text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary transition-colors cursor-pointer"
+        (change)="setCategory($any($event.target).value || null)"
+      >
+        <option value="">Todos</option>
 
-      @for (cat of categories(); track $index) {
-      <button (click)="setCategory(cat)"
-        [class]="'px-4 py-2 rounded-xl text-sm font-medium transition-colors effect-clicked ' + (currentCategory() === cat ? 'bg-primary text-primary-foreground hover:inset-shadow-sm hover:inset-shadow-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-accent')">
-        {{ cat }}
-      </button>
-      }
+        @for (cat of categories(); track cat) {
+          <option [value]="cat">
+            {{ cat }}
+          </option>
+        }
+      </select>
     </div>
   </div>
-</section>
+</form>
