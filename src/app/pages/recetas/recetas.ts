@@ -25,7 +25,8 @@ export class Recetas {
   readonly searchParams = computed(() => ({
     search: this.queryParams().get('search') ?? undefined,
     category: this.queryParams().get('category') ?? undefined,
-    cursor: Number(this.queryParams().get('cursor')) ?? undefined,
+    // BUG 3 CORREGIDO: Evita evaluar Number(null) que resultaba en 0.
+    cursor: this.queryParams().get('cursor') ? Number(this.queryParams().get('cursor')) : undefined,
     direction: (this.queryParams().get('dir') == 'previous'
       ? 'previous'
       : 'next') as CursorDirection,
