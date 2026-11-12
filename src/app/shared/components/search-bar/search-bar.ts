@@ -1,47 +1,115 @@
-import { Component, input, inject, signal, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { API_URL } from '@app/config/api.config';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, inject, input } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { LucideFunnel, LucideSearch } from '@lucide/angular';
+import { CategoryType } from '@api/index';
+import { CategoryService } from '@app/services/category/category';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 
 @Component({
+  imports: [LucideFunnel, LucideSearch],
   selector: 'app-search-bar',
-  imports: [FormsModule],
   templateUrl: './search-bar.html',
 })
-export class SearchBar implements OnInit {
-  categories_type = input.required<'recipe' | 'tip'>();
-  href = input<string>('');
-  placeholder = input<string>('Buscar receta por nombre...'); // BUG 2 CORREGIDO
-  
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private http = inject(HttpClient);
-  private apiUrl = inject(API_URL);
+export class SearchBar {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  categories = signal<string[]>([]);
-  searchQuery = '';
-  selectedCategory = '';
+  private readonly categoryService = inject(CategoryService);
 
-  ngOnInit() {
-    this.http.get<string[]>(`${this.apiUrl}/categories/names?only_type=${this.categories_type()}`)
-      .subscribe(cats => this.categories.set(cats));
-    
-    this.route.queryParams.subscribe(params => {
-      this.searchQuery = params['search'] || '';
-      this.selectedCategory = params['category'] || '';
+  readonly categories_type = input.required<CategoryType>();
+
+  private searchSubject = new Subject<string | null>();
+
+  readonly categories = toSignal(
+    toObservable(this.categories_type).pipe(
+      switchMap((type) => this.categoryService.getNames(type)),
+    ),
+    { initialValue: [] },
+  );
+
+  readonly queryParams = toSignal(this.route.queryParamMap, {
+    initialValue: this.route.snapshot.queryParamMap,
+  });
+
+  readonly currentSearch = computed(() => this.queryParams().get('search') ?? '');
+
+  readonly currentCategory = computed(() => {
+    const category = this.queryParams().get('category');
+
+    if (!category) return null;
+
+    return this.categories().find((c) => c === category) ?? null;
+  });
+
+  constructor() {
+    this.searchSubject.pipe(debounceTime(400), distinctUntilChanged()).subscribe((search) => {
+      this.setSearch(search);
     });
   }
 
-  onSearch() {
-    const queryParams: any = {};
-    if (this.searchQuery) queryParams.search = this.searchQuery;
-    if (this.selectedCategory) queryParams.category = this.selectedCategory;
-    
-    queryParams.cursor = null;
-    queryParams.dir = null;
+  debounceSearch(search: string | null) {
+    const result = search?.trim() || null;
 
-    const path = this.href() || window.location.pathname;
-    this.router.navigate([path], { queryParams, queryParamsHandling: 'merge' });
+    this.searchSubject.next(result);
+  }
+
+  setSearch(search: string | null) {
+    const result = search?.length ? search : null;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: result,
+        cursor: null,
+        dir: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  setCategory(category: string | null) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        category: category,
+        cursor: null,
+        dir: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  setFilters(search: string | null, category: string | null) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: search || null,
+        category: category || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  clearFilters() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: null,
+        category: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  onEnter() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        search: this.currentSearch(),
+        category: this.currentCategory(),
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 }
