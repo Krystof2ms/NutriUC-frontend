@@ -2,6 +2,9 @@
   <div class="space-y-2">
     <label class="text-sm font-medium">Título del Tip</label>
     <input type="text" formControlName="title" class="w-full p-2 rounded-md border border-border bg-background" placeholder="Ej. Cómo conservar la palta fresca...">
+    @if (errores().title; as mensaje) {
+      <p class="text-sm text-destructive">{{ mensaje }}</p>
+    }
   </div>
 
   <div class="space-y-2">
@@ -12,16 +15,22 @@
         <option [value]="cat">{{ cat }}</option>
       }
     </select>
+    @if (errores().category; as mensaje) {
+      <p class="text-sm text-destructive">{{ mensaje }}</p>
+    }
   </div>
 
   <div class="space-y-2">
     <label class="text-sm font-medium">Contenido</label>
     <textarea formControlName="content" rows="6" class="w-full p-2 rounded-md border border-border bg-background" placeholder="Escribe tu tip aquí..."></textarea>
+    @if (errores().content; as mensaje) {
+      <p class="text-sm text-destructive">{{ mensaje }}</p>
+    }
   </div>
 
   <div class="flex justify-end gap-4 pt-4 border-t border-border">
-    <button type="button" onclick="history.back()" class="px-4 py-2 rounded-md border border-border hover:bg-muted transition cursor-pointer">Cancelar</button>
-    <button type="submit" [disabled]="form.invalid || isLoading()" class="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 cursor-pointer">
+    <button type="button" (click)="cancelar()" class="px-4 py-2 rounded-md border border-border hover:bg-muted transition cursor-pointer">Cancelar</button>
+    <button type="submit" [disabled]="isLoading()" class="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50 cursor-pointer">
       {{ isLoading() ? 'Guardando...' : 'Guardar Tip' }}
     </button>
   </div>

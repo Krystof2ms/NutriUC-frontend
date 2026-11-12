@@ -1,9 +1,9 @@
-import { Component, input, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, computed, input, signal } from '@angular/core';
+
+const LIMITE_RESUMEN = 160;
 
 @Component({
   selector: 'app-tip-card',
-  imports: [DatePipe],
   templateUrl: './tip-card.html',
 })
 export class TipCard {
@@ -15,4 +15,8 @@ export class TipCard {
   createdAt = input.required<string>();
 
   expanded = signal(false);
+  esLarga = computed(() => this.content().length > LIMITE_RESUMEN);
+  fechaFormateada = computed(() =>
+    new Date(this.createdAt()).toLocaleDateString('es-PE', { dateStyle: 'medium' }),
+  );
 }

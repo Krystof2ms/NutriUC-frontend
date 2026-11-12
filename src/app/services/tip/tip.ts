@@ -7,10 +7,10 @@ import {
   TipCreate,
   TipCreateResponses,
   TipDeleteResponses,
+  TipDTO,
   TipSearchResponses,
   TipUpdate,
-  TipUpdateResponses,
-  TipGetByIdResponse
+  TipUpdateResponses
 } from '@api/index';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
@@ -21,7 +21,7 @@ type GetSearchErrors = ApiError<ErrorResponseMap<TipSearchResponses>>;
 type PatchUpdateErrors = ApiError<ErrorResponseMap<TipUpdateResponses>>;
 type PostCreateErrors = ApiError<ErrorResponseMap<TipCreateResponses>>;
 type DeleteErrors = ApiError<ErrorResponseMap<TipDeleteResponses>>;
-type GetByIdErrors = ApiError<any>;
+type GetByIdErrors = ApiError<object>;
 
 @Service()
 export class TipService {
@@ -53,8 +53,8 @@ export class TipService {
   }
 
   getById(id: number) {
-    return normalizeApi<TipGetByIdResponse, GetByIdErrors>(
-      this.http.get<TipGetByIdResponse>(`${this.apiUrl}/tip/${id}`, { withCredentials: true }),
+    return normalizeApi<TipDTO, GetByIdErrors>(
+      this.http.get<TipDTO>(`${this.apiUrl}/tip/${id}`, { withCredentials: true }),
     );
   }
 

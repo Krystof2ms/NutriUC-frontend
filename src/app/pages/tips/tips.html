@@ -16,9 +16,9 @@
     @if (tips(); as response) {
       @if (response.success) {
         @let body = response.data;
-        <p class="text-sm text-muted-foreground mb-6">Total: {{ body.data.length ?? 0 }}</p>
+        <p class="text-sm text-muted-foreground mb-6">Mostrando {{ body.data.length }} tips</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
-          @for (tip of body.data; track $index) {
+          @for (tip of body.data; track tip.id) {
             <app-tip-card
               class="animate-delay"
               animate.enter="animate-slide-in-200"
