@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   LucideBookOpen,
   LucideDynamicIcon,
@@ -15,7 +16,7 @@ type Feature = {
 };
 
 @Component({
-  imports: [LucideDynamicIcon],
+  imports: [LucideDynamicIcon, RouterLink],
   selector: 'app-root',
   templateUrl: './root.html',
 })
@@ -42,5 +43,5 @@ export class Root {
       color: 'bg-secondary/10 text-secondary',
     },
   ];
-  heroImage = '/hero-food.webp';
+  heroImage = '/hero-food.jpg';
 }
