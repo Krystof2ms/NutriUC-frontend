@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   LucideBookOpen,
   LucideDynamicIcon,
@@ -15,7 +16,7 @@ type Feature = {
 };
 
 @Component({
-  imports: [LucideDynamicIcon],
+  imports: [LucideDynamicIcon, RouterLink],
   selector: 'app-root',
   templateUrl: './root.html',
 })

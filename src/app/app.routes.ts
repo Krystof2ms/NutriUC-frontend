@@ -11,29 +11,63 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        data: {
+          title: 'Web Saludable UC | Alimentación saludable',
+          description:
+            'Alimentación saludable para estudiantes universitarios: recetas, consejos y recursos prácticos.',
+          robots: 'index, follow',
+        },
         loadComponent: () => import('./pages/root/root').then((c) => c.Root),
       },
       {
         path: 'recetas',
+        data: {
+          title: 'Recetas saludables | Web Saludable UC',
+          description:
+            'Descubre recetas saludables, prácticas y accesibles para estudiantes universitarios.',
+          robots: 'index, follow',
+        },
         loadComponent: () => import('./pages/recetas/recetas').then((c) => c.Recetas),
       },
       {
         path: 'recetas/:id',
+        data: {
+          title: 'Receta saludable | Web Saludable UC',
+          description: 'Conoce los ingredientes y la preparación de esta receta saludable.',
+          robots: 'index, follow',
+          type: 'article',
+        },
         loadComponent: () => import('./pages/receta-id/receta-id').then((c) => c.RecetaId),
       },
       // NUEVA RUTA: Pública Tips
       {
         path: 'tips',
+        data: {
+          title: 'Tips saludables | Web Saludable UC',
+          description:
+            'Consejos prácticos para una alimentación saludable en la vida universitaria.',
+          robots: 'index, follow',
+        },
         loadComponent: () => import('./pages/tips/tips').then((c) => c.Tips),
       },
     ],
   },
   {
     path: 'login',
+    data: {
+      title: 'Iniciar sesión | Web Saludable UC',
+      description: 'Inicia sesión en Web Saludable UC.',
+      robots: 'noindex, nofollow',
+    },
     loadComponent: () => import('./pages/login/login').then((c) => c.Login),
   },
   {
     path: 'dashboard',
+    data: {
+      title: 'Mi espacio | Web Saludable UC',
+      description: 'Administra tus recetas y consejos saludables.',
+      robots: 'noindex, nofollow',
+    },
     canActivate: [authGuard],
     canActivateChild: [authGuard],
     children: [
@@ -110,7 +144,9 @@ export const routes: Routes = [
           {
             path: 'mis-tips/nuevo',
             loadComponent: () =>
-              import('./pages/dashboard/user/my-tip-create/my-tip-create').then((c) => c.MyTipCreate),
+              import('./pages/dashboard/user/my-tip-create/my-tip-create').then(
+                (c) => c.MyTipCreate,
+              ),
           },
           {
             path: 'mis-tips/:id/edit',
