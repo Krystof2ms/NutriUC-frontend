@@ -1,0 +1,14 @@
+{
+  "name": "Web Saludable UC",
+  "short_name": "Saludable UC",
+  "description": "Alimentación saludable para estudiantes universitarios.",
+  "lang": "es-PE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "/isologo-web.webp", "sizes": "any", "type": "image/png", "purpose": "any" }
+  ]
+}

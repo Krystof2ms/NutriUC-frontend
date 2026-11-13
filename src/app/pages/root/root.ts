@@ -42,5 +42,5 @@ export class Root {
       color: 'bg-secondary/10 text-secondary',
     },
   ];
-  heroImage = '/hero-food.jpg';
+  heroImage = '/hero-food.webp';
 }
