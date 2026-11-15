@@ -81,10 +81,10 @@
             <input
               #fileInput
               id="image-recipe"
-              class="input-image"
               type="file"
               accept="image/*"
               (change)="onFileSelected($event)"
+              class="block w-full rounded-lg border border-input bg-field text-sm text-foreground file:mr-4 file:cursor-pointer file:border-0 file:border-r file:border-input file:bg-muted file:px-4 file:py-2 file:font-medium file:text-accent-foreground hover:file:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
 
             <span class="text-muted-foreground text-sm"> JPG, PNG o WebP. Máximo 2 MB. </span>
