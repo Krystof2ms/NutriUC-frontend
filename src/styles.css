@@ -24,7 +24,7 @@
 
   /* Secondary */
   --color-secondary: oklch(0.7064 0.1393 46.15); /* #e75d37 */
-  --color-secondary-foreground: oklch(0.1684 0 0); /* #0c2815 */
+  --color-secondary-foreground: oklch(1 0 0); /* #0c2815 */
 
   /* Muted layers */
   --color-muted: oklch(0.92 0.03 80);
