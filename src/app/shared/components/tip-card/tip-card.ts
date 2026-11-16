@@ -1,8 +1,10 @@
 import { Component, computed, input, signal } from '@angular/core';
+import { LucideUser } from '@lucide/angular';
 
 const LIMITE_RESUMEN = 160;
 
 @Component({
+  imports: [LucideUser],
   selector: 'app-tip-card',
   templateUrl: './tip-card.html',
 })

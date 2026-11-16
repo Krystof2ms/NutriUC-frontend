@@ -9,14 +9,18 @@ import { TipCard } from '@app/shared/components/tip-card/tip-card';
 import { NavigationButtons } from '@app/shared/components/navigation-buttons/navigation-buttons';
 import { CursorDirection } from '@api/index';
 import { toast } from 'ngx-sonner';
+import { LucidePencil, LucidePlus, LucideTrash2 } from '@lucide/angular';
 
 @Component({
   imports: [
-    SearchBar, 
-    TipCardSkeleton, 
-    TipCard, 
-    NavigationButtons, 
-    RouterLink
+    SearchBar,
+    TipCardSkeleton,
+    TipCard,
+    NavigationButtons,
+    RouterLink,
+    LucidePlus,
+    LucidePencil,
+    LucideTrash2
   ],
   selector: 'app-my-tips',
   templateUrl: './my-tips.html',
