@@ -23,8 +23,8 @@
   --color-primary-foreground: oklch(0.97 0.05 80);
 
   /* Secondary */
-  --color-secondary: oklch(0.65 0.18 36);
-  --color-secondary-foreground: oklch(1 0 0);
+  --color-secondary: oklch(0.7064 0.1393 46.15); /* #e75d37 */
+  --color-secondary-foreground: oklch(1 0 0); /* #0c2815 */
 
   /* Muted layers */
   --color-muted: oklch(0.92 0.03 80);
@@ -124,8 +124,8 @@
     --color-primary-foreground: oklch(0.18 0.05 150);
 
     /* Secondary */
-    --color-secondary: oklch(0.62 0.17 36);
-    --color-secondary-foreground: oklch(25.915% 0.05378 151.42);
+    --color-secondary: oklch(0.7064 0.1393 46.15);
+    --color-secondary-foreground: oklch(0.1684 0 0);
 
     /* Muted layers */
     --color-muted: oklch(0.26 0.025 150);

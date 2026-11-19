@@ -1,16 +1,19 @@
 @reference "#styles.css";
 
 .field-group {
-  @apply flex flex-col space-y-2;
+  @apply flex flex-col gap-2;
 }
 
 .field-group > label {
-  @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+  @apply text-sm font-medium leading-none;
 }
 
-.field-group input,
-.field-group select {
-  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+.field-group :is(input, select) {
+  @apply h-10 w-full rounded-md border border-input
+    bg-background px-3 py-2 text-base
+    ring-offset-background
+    disabled:cursor-not-allowed disabled:opacity-50
+    md:text-sm;
 }
 
 .field-group input {
@@ -30,13 +33,14 @@
 }
 
 .btn-add {
-  @apply flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground;
+  @apply flex h-9 items-center justify-center gap-2
+    whitespace-nowrap rounded-md border border-input
+    bg-background px-3 text-sm font-medium
+    ring-offset-background transition-colors
+    hover:bg-accent hover:text-accent-foreground;
 }
 
 .btn-delete {
-  @apply rounded-md px-2 py-0.5 text-red-800 hover:bg-muted disabled:text-muted-foreground;
-}
-
-.input-image {
-  @apply block w-full rounded-lg border border-input bg-field text-sm text-foreground file:mr-4 file:cursor-pointer file:border-0 file:border-r file:border-input file:bg-muted file:px-4 file:py-2 file:font-medium file:text-accent-foreground hover:file:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  @apply rounded-md px-2 py-0.5 text-red-800
+    hover:bg-muted disabled:text-muted-foreground;
 }

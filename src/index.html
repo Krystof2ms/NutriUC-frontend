@@ -2,9 +2,38 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Web Saludable UC</title>
+    <script>
+      (() => {
+        try {
+          const preference = localStorage.getItem('theme-preference');
+          const theme =
+            preference === 'light' || preference === 'dark'
+              ? preference
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+
+          document.documentElement.classList.remove('light', 'dark');
+          document.documentElement.classList.add(theme);
+        } catch {
+          document.documentElement.classList.add(
+            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+          );
+        }
+      })();
+    </script>
+    <title>Nutri UC</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Alimentación saludable para estudiantes universitarios: recetas, consejos y recursos prácticos."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:site_name" content="Nutri UC" />
+    <meta property="og:locale" content="es_PE" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
   </head>
   <body>
