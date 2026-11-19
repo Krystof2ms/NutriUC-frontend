@@ -63,6 +63,16 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/register/register').then((c) => c.Register),
   },
   {
+    path: 'unauthorized',
+    data: {
+      title: 'Acceso | Nutri UC',
+      description: 'Inicia sesión o crea una cuenta para acceder a tu espacio en Nutri UC.',
+      robots: 'noindex, nofollow',
+    },
+    loadComponent: () =>
+      import('./shared/pages/unauthorized/unauthorized').then((c) => c.Unauthorized),
+  },
+  {
     path: 'dashboard',
     data: {
       title: 'Mi espacio | Nutri UC',
