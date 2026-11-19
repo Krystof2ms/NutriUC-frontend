@@ -5,8 +5,6 @@ import { normalizeApi } from '@app/shared/utils/to-normalize-api';
 import {
   ErrorResponseMap,
   MessageResponse,
-  UserCreate,
-  UserCreateResponses,
   UserStats,
   UserStatsResponses,
   UserUpdate,
@@ -18,7 +16,6 @@ import { ApiError } from '@app/types/http';
 type GetStatsErrors = ApiError<ErrorResponseMap<UserStatsResponses>>;
 type UpdateErrors = ApiError<ErrorResponseMap<UserUpdateMeResponses>>;
 type UpdateAvatarErrors = ApiError<ErrorResponseMap<UserUpdateAvatarResponses>>;
-type CreateUserErrors = ApiError<ErrorResponseMap<UserCreateResponses>>;
 
 type Crop = {
   x: number;
@@ -30,12 +27,6 @@ type Crop = {
 export class UserService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${inject(API_URL)}/users`;
-
-  create(user: UserCreate) {
-    return normalizeApi<MessageResponse, CreateUserErrors>(
-      this.http.post<MessageResponse>(`${this.apiUrl}/`, user),
-    );
-  }
 
   getStats() {
     return normalizeApi<UserStats, GetStatsErrors>(

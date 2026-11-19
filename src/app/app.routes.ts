@@ -33,10 +33,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login').then((c) => c.Login),
   },
   {
-    path: 'register',
-    loadComponent: () => import('./pages/register/register').then((c) => c.Register),
-  },
-  {
     path: 'dashboard',
     canActivate: [authGuard],
     canActivateChild: [authGuard],
