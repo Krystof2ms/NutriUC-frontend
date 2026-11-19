@@ -1,1 +1,61 @@
-<p>my-tips works!</p>
+<div class="p-6 max-w-6xl mx-auto w-full">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+    <div>
+      <h1 class="text-3xl font-bold mb-2">Mis Tips</h1>
+      <p class="text-muted-foreground">Administra los tips que has compartido con la comunidad.</p>
+    </div>
+    <a routerLink="nuevo" class="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium shadow-sm hover:opacity-90 transition flex items-center gap-2">
+      <svg lucidePlus class="w-5 h-5" />
+      Crear Tip
+    </a>
+  </div>
+
+  <app-search-bar categories_type="tip" href="/dashboard/user/mis-tips" placeholder="Buscar mis tips..."></app-search-bar>
+
+  <div class="mt-8">
+    @if (tips(); as response) {
+      @if (response.success) {
+        @let body = response.data;
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          @for (tip of body.data; track tip.id) {
+            <div class="relative group h-full">
+              <app-tip-card
+                [id]="tip.id"
+                [category]="tip.category"
+                [title]="tip.title"
+                [content]="tip.content"
+                [ownerName]="tip.owner.name"
+                [createdAt]="tip.created_at"
+              />
+              <div class="absolute top-2 right-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity bg-background/80 p-1 rounded-lg backdrop-blur-sm">
+                <a [routerLink]="[tip.id, 'edit']" class="p-2 bg-secondary text-secondary-foreground rounded-md hover:opacity-80 transition cursor-pointer" title="Editar">
+                  <svg lucidePencil class="w-4 h-4" />
+                </a>
+                <button (click)="deleteTip(tip.id)" class="p-2 bg-destructive text-destructive-foreground rounded-md hover:opacity-80 transition cursor-pointer" title="Eliminar">
+                  <svg lucideTrash2 class="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+        <app-navigation-buttons
+          [previous_cursor]="body.previous_cursor"
+          [next_cursor]="body.next_cursor"
+        />
+      } @else {
+        <div class="text-center py-16 flex flex-col items-center justify-center bg-card rounded-xl border border-dashed border-border mt-8">
+          <p class="text-4xl mb-4">✍️</p>
+          <h3 class="text-xl font-semibold mb-2">Aún no tienes tips publicados</h3>
+          <p class="text-muted-foreground mb-6">Comparte tu conocimiento con la comunidad.</p>
+          <a routerLink="nuevo" class="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium">Crear mi primer tip</a>
+        </div>
+      }
+    } @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch mt-8">
+        <app-tip-card-skeleton />
+        <app-tip-card-skeleton />
+        <app-tip-card-skeleton />
+      </div>
+    }
+  </div>
+</div>

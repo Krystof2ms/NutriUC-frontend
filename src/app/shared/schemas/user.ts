@@ -12,12 +12,18 @@ export const loginSchema = z.compile(
 export const registerSchema = z.compile(
   z
     .object({
-      username: z.string().min(1, { message: "Nombre de usuario inválido" }),
-      email: z.email({ message: "Correo electrónico inválido" }),
-      password: z.string().min(1, { message: "Contraseña inválida" }),
+      name: z
+        .string()
+        .trim()
+        .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+      email: z.email({ message: "Correo electrónico no válido" }),
+      password: z
+        .string()
+        .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+        .max(20, { message: "La contraseña no puede exceder los 20 caracteres" }),
       confirmPassword: z
         .string()
-        .min(1, { message: "Confirmación de contraseña inválida" }),
+        .min(1, { message: "Confirma tu contraseña" }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Las contraseñas no coinciden",
@@ -33,10 +39,10 @@ export const updateSchema = z.compile(
         z.string().min(3, { message: "Nombre de usuario inválido" }),
       ]),
       email: z
-    .union([
-      z.literal(""),
-      z.email({ message: "Correo electrónico inválido" }),
-    ]),
+        .union([
+          z.literal(""),
+          z.email({ message: "Correo electrónico inválido" }),
+        ]),
       newPassword: z.union([
         z.literal(""),
         z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
