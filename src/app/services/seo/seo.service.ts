@@ -23,7 +23,7 @@ export class SeoService {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly additionalTags = new Set<string>();
-  private readonly defaultTitle = 'Web Saludable UC';
+  private readonly defaultTitle = 'Nutri UC';
 
   update(config: SeoConfig): void {
     this.title.setTitle(config.title || this.defaultTitle);

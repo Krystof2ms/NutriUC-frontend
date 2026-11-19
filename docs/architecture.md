@@ -1,4 +1,4 @@
-# NutriUC Frontend Architecture
+# Nutri UC Frontend Architecture
 
 > [!NOTE]
 > **Work in progress:** this document describes the frontend implementation in this repository. Backend internals are outside its scope.
@@ -13,9 +13,9 @@ The application is hosted by Express through Angular SSR. The server prerenders 
 
 ```mermaid
 flowchart TD
-    Browser["Browser / NutriUC UI"]
+    Browser["Browser / Nutri UC UI"]
 
-    subgraph Frontend["NutriUC Frontend"]
+    subgraph Frontend["Nutri UC Frontend"]
         subgraph Presentation["Angular application"]
             Public["Public routes<br/>/ · /recetas · /recetas/:id"]
             Login["Login route<br/>/login"]
@@ -55,7 +55,7 @@ flowchart TD
         end
     end
 
-    Backend["NutriUC backend API<br/>REST /api/v1"]
+    Backend["Nutri UC backend API<br/>REST /api/v1"]
     Socket["Backend WebSocket<br/>/events/connect"]
 
     Browser --> Public
