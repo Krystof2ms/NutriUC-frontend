@@ -1,4 +1,4 @@
-# NutriUC Frontend
+# Nutri UC Frontend
 
 [![Project Status: Work in Progress](https://img.shields.io/badge/status-work--in--progress-amber.svg)](#)
 [![Angular](https://img.shields.io/badge/Angular-22-dd0031.svg?logo=angular)](https://angular.dev/)
@@ -6,7 +6,7 @@
 [![Package Manager](https://img.shields.io/badge/package_manager-bun-fbf0df.svg?logo=bun)](https://bun.sh/)
 [![Testing](https://img.shields.io/badge/tested_with-vitest-6e9f18.svg?logo=vitest)](https://vitest.dev/)
 
-NutriUC is a web application for discovering and managing recipes and nutrition tips. This repository contains the Angular frontend, including its Express SSR host, client-side routes, API clients, and authenticated dashboard.
+Nutri UC is a web application for discovering and managing recipes and nutrition tips. This repository contains the Angular frontend, including its Express SSR host, client-side routes, API clients, and authenticated dashboard.
 
 > [!NOTE]
 > **Work in progress:** routes, API contracts, and features can change during development.
@@ -78,7 +78,7 @@ frontend/
 ### Prerequisites
 
 - Bun `1.4.0` (declared package manager), or Node.js `>=22` with a compatible package manager.
-- NutriUC backend API. Development defaults to `http://localhost:3000/api/v1`.
+- Nutri UC backend API. Development defaults to `http://localhost:3000/api/v1`.
 
 ### Install dependencies
 

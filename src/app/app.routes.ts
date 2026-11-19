@@ -12,7 +12,7 @@ export const routes: Routes = [
       {
         path: '',
         data: {
-          title: 'Web Saludable UC | Alimentación saludable',
+          title: 'Nutri UC | Alimentación saludable',
           description:
             'Alimentación saludable para estudiantes universitarios: recetas, consejos y recursos prácticos.',
           robots: 'index, follow',
@@ -22,7 +22,7 @@ export const routes: Routes = [
       {
         path: 'recetas',
         data: {
-          title: 'Recetas saludables | Web Saludable UC',
+          title: 'Recetas saludables | Nutri UC',
           description:
             'Descubre recetas saludables, prácticas y accesibles para estudiantes universitarios.',
           robots: 'index, follow',
@@ -32,7 +32,7 @@ export const routes: Routes = [
       {
         path: 'recetas/:id',
         data: {
-          title: 'Receta saludable | Web Saludable UC',
+          title: 'Receta saludable | Nutri UC',
           description: 'Conoce los ingredientes y la preparación de esta receta saludable.',
           robots: 'index, follow',
           type: 'article',
@@ -43,7 +43,7 @@ export const routes: Routes = [
       {
         path: 'tips',
         data: {
-          title: 'Tips saludables | Web Saludable UC',
+          title: 'Tips saludables | Nutri UC',
           description:
             'Consejos prácticos para una alimentación saludable en la vida universitaria.',
           robots: 'index, follow',
@@ -55,8 +55,8 @@ export const routes: Routes = [
   {
     path: 'login',
     data: {
-      title: 'Iniciar sesión | Web Saludable UC',
-      description: 'Inicia sesión en Web Saludable UC.',
+      title: 'Iniciar sesión | Nutri UC',
+      description: 'Inicia sesión en Nutri UC.',
       robots: 'noindex, nofollow',
     },
     loadComponent: () => import('./pages/login/login').then((c) => c.Login),
@@ -64,7 +64,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     data: {
-      title: 'Mi espacio | Web Saludable UC',
+      title: 'Mi espacio | Nutri UC',
       description: 'Administra tus recetas y consejos saludables.',
       robots: 'noindex, nofollow',
     },
