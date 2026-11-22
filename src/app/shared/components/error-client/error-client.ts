@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   imports: [RouterLink],
@@ -9,4 +9,5 @@ import { RouterLink } from '@angular/router';
 export class ErrorClient {
   href = input.required<string>();
   title = input('Error');
+  relativeTo = input<ActivatedRoute | null>(null);
 }

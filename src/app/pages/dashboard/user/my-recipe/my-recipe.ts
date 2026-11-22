@@ -58,4 +58,8 @@ export class MyRecipe {
   onEdit() {
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
+
+  get errorReturnRoute() {
+    return this.route.parent;
+  }
 }
