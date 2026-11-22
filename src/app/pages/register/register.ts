@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, FormRoot, validateStandardSchema } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '@app/services/user/user';
+import { AuthService } from '@app/services/auth/auth';
 import { Header } from '@app/shared/components/header/header';
 import { InputPassword } from '@app/shared/components/input-password/input-password';
 import { Sonner } from '@app/shared/components/sonner/sonner';
@@ -26,6 +27,7 @@ const MAX_PASSWORD = 20;
 export class Register {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
+  private readonly authService = inject(AuthService);
 
   protected readonly toast = toast;
 
@@ -64,6 +66,7 @@ export class Register {
               return;
             }
 
+            this.authService.invalidateData();
             this.toast.success('Cuenta creada. Ahora inicia sesión.');
             setTimeout(() => void this.router.navigate(['/login']), 2000);
           } catch (error) {

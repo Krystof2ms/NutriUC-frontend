@@ -64,6 +64,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
+    this.invalidateData();
     const body = new HttpParams().set('email', email).set('password', password);
 
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
@@ -77,6 +78,7 @@ export class AuthService {
   }
 
   logout() {
+    this.invalidateData();
     return normalizeApi<MessageResponse, LogoutErrors>(
       this.http.post<MessageResponse>(`${this.authApiUrl}/logout`, null, {
         withCredentials: true,

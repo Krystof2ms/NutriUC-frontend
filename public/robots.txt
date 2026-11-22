@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /dashboard/
+Disallow: /unauthorized
 Sitemap: {{SITE_URL}}/sitemap.xml

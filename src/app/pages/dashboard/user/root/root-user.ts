@@ -31,7 +31,7 @@ export class RootUser {
           title: 'Crear una receta',
           desc: 'Comparte una nueva receta saludable.',
           icon: LucideCirclePlus,
-          to: `${this.basePathname}/mis-recetas/nueva`,
+          to: `${this.basePathname}/mis-recetas/new`,
         },
       ],
     },

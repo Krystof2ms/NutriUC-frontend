@@ -125,7 +125,7 @@
         <svg class="w-6" lucidePencil />
       </button>
     } @else {
-      <app-error-client href="/recetas" title="Receta no encontrada" />
+      <app-error-client href=".." [relativeTo]="errorReturnRoute" title="Receta no encontrada" />
     }
   } @else {
     <p>Cargando ...</p>
