@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoryService } from '@app/services/category/category';
 import { RecipeService } from '@app/services/recipe/recipe';
+import { ToastService } from '@app/services/toast/toast';
 import { FormRecipe, type RecipeSubmit } from '@app/shared/components/form-recipe/form-recipe';
 import { LucideArrowLeft } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
@@ -17,6 +18,7 @@ export class MyRecipeCreate {
   private router = inject(Router);
   private recipeService = inject(RecipeService);
   private categoryService = inject(CategoryService);
+  protected readonly toast = inject(ToastService);
 
   categories = toSignal(this.categoryService.getNames('recipe'), { initialValue: [] });
 
@@ -33,13 +35,12 @@ export class MyRecipeCreate {
       const id = resultCreated.data.message;
 
       if (!form.image) {
-        console.error('error create recipe image');
+        console.log('undefined recipe image');
         return;
       }
 
       const result = await firstValueFrom(this.recipeService.updateImage(id, form.image));
 
-      console.log('create image:', result.success);
       this.router.navigate(['..'], { relativeTo: this.route });
     } catch {}
   }
