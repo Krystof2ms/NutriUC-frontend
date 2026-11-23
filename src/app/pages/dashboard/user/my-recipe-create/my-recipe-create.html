@@ -1,6 +1,7 @@
 <main>
   <a
-    routerLink=".."
+    href=".."
+    (click)="$event.preventDefault(); onCancel()"
     class="inline-flex items-center gap-1.5 text-sm text-secondary hover:text-secondary/60 mb-4 transition-colors"
   >
     <svg lucideArrowLeft class="w-4" />
@@ -17,4 +18,15 @@
     (recipeSubmit)="onSubmit($event)"
     (cancelSubmit)="onCancel()"
   />
+
+  <app-confirm-dialog
+    dialogId="confirm-leave-recipe"
+    title="¿Salir sin guardar?"
+    description="Si sales ahora, perderás los datos de la receta que ingresaste."
+    okClass="bg-destructive text-destructive-foreground hover:bg-destructive/85"
+    (confirmed)="confirmLeave()"
+  >
+    <svg dialog-icon lucideArrowLeft class="w-5" />
+    <span btn_ok>Salir sin guardar</span>
+  </app-confirm-dialog>
 </main>

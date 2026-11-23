@@ -1,8 +1,10 @@
 <dialog
+  #dialog
   [id]="dialogId()"
   [attr.aria-labelledby]="dialogId() + '-title'"
   [attr.aria-describedby]="dialogId() + '-description'"
   class="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-border bg-card p-0 text-card-foreground shadow-2xl backdrop:bg-foreground/50 backdrop:backdrop-blur-sm"
+  (cancel)="$event.preventDefault(); cancel()"
 >
   <div class="p-6 sm:p-7">
     <div class="mb-5 flex items-start gap-4">
@@ -20,8 +22,7 @@
     <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
       <button
         type="button"
-        command="close"
-        [attr.commandfor]="dialogId()"
+        (click)="cancel()"
         [disabled]="busy()"
         class="rounded-lg border border-border px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >

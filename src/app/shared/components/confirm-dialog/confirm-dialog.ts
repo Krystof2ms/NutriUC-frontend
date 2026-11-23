@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, ElementRef, input, output, viewChild } from '@angular/core';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -12,9 +12,24 @@ export class ConfirmDialog {
   readonly busyText = input('Procesando…');
   readonly busy = input(false);
   readonly confirmed = output<void>();
+  readonly cancelled = output<void>();
+  private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
+
+  open() {
+    this.dialog().nativeElement.showModal();
+  }
+
+  close() {
+    this.dialog().nativeElement.close();
+  }
 
   confirm() {
     if (this.busy()) return;
     this.confirmed.emit();
+  }
+
+  cancel() {
+    this.close();
+    this.cancelled.emit();
   }
 }

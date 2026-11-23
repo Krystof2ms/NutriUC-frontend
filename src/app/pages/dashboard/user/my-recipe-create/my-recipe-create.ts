@@ -1,15 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from '@app/services/category/category';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { ToastService } from '@app/services/toast/toast';
 import { FormRecipe, type RecipeSubmit } from '@app/shared/components/form-recipe/form-recipe';
+import { ConfirmDialog } from '@app/shared/components/confirm-dialog/confirm-dialog';
 import { LucideArrowLeft } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  imports: [FormRecipe, LucideArrowLeft, RouterLink],
+  imports: [FormRecipe, ConfirmDialog, LucideArrowLeft],
   selector: 'app-my-recipe-create',
   templateUrl: './my-recipe-create.html',
 })
@@ -19,6 +20,7 @@ export class MyRecipeCreate {
   private recipeService = inject(RecipeService);
   private categoryService = inject(CategoryService);
   protected readonly toast = inject(ToastService);
+  private readonly leaveDialog = viewChild.required(ConfirmDialog);
 
   categories = toSignal(this.categoryService.getNames('recipe'), { initialValue: [] });
 
@@ -43,6 +45,11 @@ export class MyRecipeCreate {
   }
 
   onCancel() {
-    
+    this.leaveDialog().open();
+  }
+
+  confirmLeave() {
+    this.leaveDialog().close();
+    void this.router.navigate(['..'], { relativeTo: this.route });
   }
 }
