@@ -118,12 +118,36 @@
         </section>
       </div>
 
-      <button
-        class="bg-primary p-4 rounded-full absolute bottom-0 right-0 hover:bg-primary/40 transition hover:-translate-2 effect-clicked"
-        (click)="onEdit()"
+      <div class="w-fit sticky bottom-0 right-0 flex flex-col gap-2">
+        <button
+          class="p-4 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/60 hover:-translate-1 effect-clicked"
+          command="show-modal" commandfor="confirm-delete"
+        >
+          <svg class="w-6" lucideTrash />
+        </button>
+
+        <button
+          class="bg-primary text-primary-foreground p-4 rounded-full hover:bg-primary/60 transition hover:-translate-1 effect-clicked w-fit"
+          (click)="onEdit()"
+        >
+          <svg class="w-6" lucidePencil />
+        </button>
+      </div>
+
+      <app-confirm-dialog
+        title="¿Eliminar esta receta?"
+        [description]="'Esta acción es permanente. Se eliminará “' + data.name + '” de tus recetas.'"
+        [busy]="deleting()"
+        busyText="Eliminando…"
+        okClass="bg-destructive text-destructive-foreground hover:bg-destructive/85"
+        (confirmed)="onDelete()"
       >
-        <svg class="w-6" lucidePencil />
-      </button>
+        <svg dialog-icon lucideTrash class="w-5" />
+        <span btn_ok class="inline-flex items-center gap-2">
+          <svg lucideTrash class="w-4" />
+          Eliminar receta
+        </span>
+      </app-confirm-dialog>
     } @else {
       <app-error-client href=".." [relativeTo]="errorReturnRoute" title="Receta no encontrada" />
     }
