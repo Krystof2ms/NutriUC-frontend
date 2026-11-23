@@ -34,14 +34,15 @@ export class MyRecipeCreate {
 
       const id = resultCreated.data.message;
 
-      if (!form.image) {
-        console.log('undefined recipe image');
-        return;
+      if (form.image) {
+        await firstValueFrom(this.recipeService.updateImage(id, form.image));
       }
-
-      const result = await firstValueFrom(this.recipeService.updateImage(id, form.image));
 
       this.router.navigate(['..'], { relativeTo: this.route });
     } catch {}
+  }
+
+  onCancel() {
+    
   }
 }

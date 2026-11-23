@@ -71,7 +71,7 @@
           <div class="flex flex-col w-fit">
             <button
               type="button"
-              class="flex gap-2 w-fit py-2 px-2.5 mb-2 rounded-lg bg-red-800 hover:bg-red-600 hover:-translate-y-0.5 transition effect-clicked disabled:bg-muted-foreground"
+              class="flex gap-2 w-fit py-2 px-2.5 mb-2 rounded-lg bg-destructive hover:bg-destructive/60 hover:-translate-y-0.5 transition effect-clicked disabled:bg-muted-foreground text-primary-foreground"
               [disabled]="!imageResult()"
               (click)="onImageDelete()"
             >
@@ -235,6 +235,7 @@
     <button
       class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset- transition-colors bg-accent text-primary hover:bg-accent/80 h-10 px-4 py-2 effect-clicked"
       type="button"
+      (click)="onCancel()"
     >
       Cancelar
     </button>

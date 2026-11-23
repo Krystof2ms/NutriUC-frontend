@@ -5,6 +5,7 @@ import { API_URL } from '@app/config/api.config';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { ToastService } from '@app/services/toast/toast';
 import { ErrorClient } from '@app/shared/components/error-client/error-client';
+import { ConfirmDialog } from '@app/shared/components/confirm-dialog/confirm-dialog';
 import { UserIcon } from '@app/shared/components/user-icon/user-icon';
 import { ErrorResponseMap, RecipeDTO, RecipeGetByIdResponses } from '@app/types/api';
 import { ApiError, ApiResult } from '@app/types/http';
@@ -23,6 +24,7 @@ type GetErrors = ApiError<ErrorResponseMap<RecipeGetByIdResponses>>;
   imports: [
     RouterLink,
     ErrorClient,
+    ConfirmDialog,
     UserIcon,
     LucideArrowLeft,
     LucideLeaf,

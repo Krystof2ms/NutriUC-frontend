@@ -12,5 +12,9 @@
     <p class="text-muted-foreground mt-1">Comparte tu nueva receta.</p>
   </div>
 
-  <app-form-recipe [categories]="categories()" (recipeSubmit)="onSubmit($event)" />
+  <app-form-recipe
+    [categories]="categories()"
+    (recipeSubmit)="onSubmit($event)"
+    (cancelSubmit)="onCancel()"
+  />
 </main>

@@ -55,6 +55,7 @@ export class FormRecipe {
   readonly categories = input.required<string[]>();
   readonly initState = input<RecipeDTO>();
   readonly recipeSubmit = output<RecipeSubmit>();
+  readonly cancelSubmit = output<void>();
 
   private readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
   recipeSchema = computed(() => dynamicEnum(this.categories()));
@@ -68,13 +69,17 @@ export class FormRecipe {
     category: '',
   });
 
-  readonly form = form(this.model, (path) => {
-    validateStandardSchema(path, updateRecipeDefaultSchema);
-  }, {
-    submission: {
-      action: async (_) => this.onSubmit()
-    }
-  });
+  readonly form = form(
+    this.model,
+    (path) => {
+      validateStandardSchema(path, updateRecipeDefaultSchema);
+    },
+    {
+      submission: {
+        action: async (_) => this.onSubmit(),
+      },
+    },
+  );
 
   nameError = computed(() =>
     this.form.name().invalid() && this.form.name().touched()
@@ -235,5 +240,9 @@ export class FormRecipe {
       recipe,
       image,
     });
+  }
+
+  onCancel() {
+    this.cancelSubmit.emit();
   }
 }

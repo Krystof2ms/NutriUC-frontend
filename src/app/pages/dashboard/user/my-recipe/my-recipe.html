@@ -134,48 +134,20 @@
         </button>
       </div>
 
-      <dialog
-        id="confirm-delete"
-        class="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-border bg-card p-0 text-card-foreground shadow-2xl backdrop:bg-foreground/10 backdrop:backdrop-blur-sm"
+      <app-confirm-dialog
+        title="¿Eliminar esta receta?"
+        [description]="'Esta acción es permanente. Se eliminará “' + data.name + '” de tus recetas.'"
+        [busy]="deleting()"
+        busyText="Eliminando…"
+        okClass="bg-destructive text-destructive-foreground hover:bg-destructive/85"
+        (confirmed)="onDelete()"
       >
-        <div class="p-6 sm:p-7">
-          <div class="mb-5 flex items-start gap-4">
-            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-destructive/10 text-destructive">
-              <svg lucideTrash class="w-5" />
-            </span>
-            <div>
-              <h2 id="confirm-delete-title" class="text-xl font-bold">¿Eliminar esta receta?</h2>
-              <p id="confirm-delete-description" class="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Esta acción es permanente. Se eliminará “{{ data.name }}” de tus recetas.
-              </p>
-            </div>
-          </div>
-
-          <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <button
-              type="button"
-              command="close"
-              commandfor="confirm-delete"
-              class="rounded-lg border border-border px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              (click)="onDelete()"
-              [disabled]="deleting()"
-              class="inline-flex items-center justify-center gap-2 rounded-lg bg-destructive px-4 py-2.5 text-sm font-semibold text-destructive-foreground transition-colors hover:bg-destructive/85 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-destructive"
-            >
-              @if (deleting()) {
-                Eliminando…
-              } @else {
-                <svg lucideTrash class="w-4" />
-                Eliminar receta
-              }
-            </button>
-          </div>
-        </div>
-      </dialog>
+        <svg dialog-icon lucideTrash class="w-5" />
+        <span btn_ok class="inline-flex items-center gap-2">
+          <svg lucideTrash class="w-4" />
+          Eliminar receta
+        </span>
+      </app-confirm-dialog>
     } @else {
       <app-error-client href=".." [relativeTo]="errorReturnRoute" title="Receta no encontrada" />
     }
