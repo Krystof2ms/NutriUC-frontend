@@ -1,6 +1,6 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from '@app/services/category/category';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { ErrorClient } from '@app/shared/components/error-client/error-client';
@@ -11,7 +11,7 @@ import { LucideArrowLeft } from '@lucide/angular';
 import { filter, firstValueFrom, map, switchMap } from 'rxjs';
 
 @Component({
-  imports: [RouterLink, FormRecipe, LucideArrowLeft, ErrorClient, ConfirmDialog],
+  imports: [FormRecipe, LucideArrowLeft, ErrorClient, ConfirmDialog],
   selector: 'app-my-recipe-edit',
   templateUrl: './my-recipe-edit.html',
 })
