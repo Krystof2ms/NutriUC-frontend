@@ -182,4 +182,5 @@ const EMPTY_USER = {
   email: '',
   created_at: '',
   has_image: false,
+  role: ""
 } satisfies BaseUser;

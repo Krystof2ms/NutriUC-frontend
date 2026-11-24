@@ -542,6 +542,8 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+            /** Role */
+            role: string;
         };
         /** UserUpdate */
         UserUpdate: {
@@ -1018,6 +1020,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MessageResponse"];
+                };
+            };
+            /** @description Image file exceeds the size limit */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
                 };
             };
             /** @description Validation error */
@@ -1588,6 +1599,15 @@ export interface operations {
                     "application/json": components["schemas"]["MessageResponse"];
                 };
             };
+            /** @description Avatar file exceeds the size limit */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponse"];
+                };
+            };
             /** @description Validation Error */
             422: {
                 headers: {
@@ -1662,7 +1682,9 @@ export interface operations {
     };
     create_api_v1_users__post: {
         parameters: {
-            query?: never;
+            query?: {
+                with_tokens?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
