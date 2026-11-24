@@ -8,7 +8,7 @@ export class ConfirmDialog {
   readonly dialogId = input('confirm-dialog');
   readonly title = input.required<string>();
   readonly description = input.required<string>();
-  readonly okClass = input('');
+  readonly okClass = input('bg-destructive text-destructive-foreground hover:bg-destructive/85');
   readonly busyText = input('Procesando…');
   readonly busy = input(false);
   readonly confirmed = output<void>();

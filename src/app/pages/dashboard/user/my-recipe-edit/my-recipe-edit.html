@@ -1,6 +1,7 @@
 <main>
   <a
-    routerLink=".."
+    href=".."
+    (click)="$event.preventDefault(); onCancel()"
     class="inline-flex items-center gap-1.5 text-sm text-secondary hover:text-secondary/60 mb-4 transition-colors"
   >
     <svg lucideArrowLeft class="w-4" />
@@ -18,9 +19,19 @@
         [categories]="categories()"
         [initState]="response.data"
         (recipeSubmit)="onSubmit($event)"
+        (cancelSubmit)="onCancel()"
       />
     } @else {
       <app-error-client href=".." title="No se pudo recuperar la receta" />
     }
   }
+  <app-confirm-dialog
+    dialogId="confirm-leave-recipe-edit"
+    title="¿Salir sin guardar?"
+    description="Si sales ahora, perderás los cambios de la receta."
+    (confirmed)="confirmLeave()"
+  >
+    <svg dialog-icon lucideArrowLeft class="w-5" />
+    <span btn_ok>Salir sin guardar</span>
+  </app-confirm-dialog>
 </main>

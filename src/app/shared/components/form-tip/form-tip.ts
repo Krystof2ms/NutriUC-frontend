@@ -1,5 +1,4 @@
 import { Component, input, output, inject, OnInit, signal } from '@angular/core';
-import { Location } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TipCreate, TipUpdate } from '@api/index';
 import { dynamicEnum } from '@app/shared/schemas/tip';
@@ -13,13 +12,13 @@ type CampoTip = 'title' | 'content' | 'category';
 })
 export class FormTip implements OnInit {
   private fb = inject(FormBuilder);
-  private location = inject(Location);
 
   initialData = input<TipUpdate | null>(null);
   categories = input.required<string[]>();
   isLoading = input<boolean>(false);
 
   submitTip = output<TipCreate>();
+  cancelSubmit = output<void>();
 
   form = this.fb.nonNullable.group({
     title: [''],
@@ -68,6 +67,6 @@ export class FormTip implements OnInit {
   }
 
   cancelar() {
-    this.location.back();
+    this.cancelSubmit.emit();
   }
 }

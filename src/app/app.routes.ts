@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth/auth-guard';
+import { dashboardIndexGuard } from './guards/dashboard/dashboard-index-guard';
 
 export const routes: Routes = [
   {
@@ -82,6 +83,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
     canActivateChild: [authGuard],
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        canActivate: [dashboardIndexGuard],
+        loadComponent: () =>
+          import('./shared/pages/loading/loading').then((c) => c.Loading),
+      },
       {
         path: 'user',
         loadComponent: () =>
