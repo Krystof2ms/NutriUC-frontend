@@ -7,6 +7,7 @@
         [categories]="categories()"
         [isLoading]="isLoading()"
         (submitTip)="updateTip($event)"
+        (cancelSubmit)="onCancel()"
       />
     } @else {
       <div class="flex justify-center p-8 animate-pulse">
@@ -14,4 +15,13 @@
       </div>
     }
   </div>
+  <app-confirm-dialog
+    dialogId="confirm-leave-tip-edit"
+    title="¿Salir sin guardar?"
+    description="Si sales ahora, perderás los cambios del tip."
+    (confirmed)="confirmLeave()"
+  >
+    <svg dialog-icon lucideArrowLeft class="w-5" />
+    <span btn_ok>Salir sin guardar</span>
+  </app-confirm-dialog>
 </div>

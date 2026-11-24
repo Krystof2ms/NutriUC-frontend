@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
@@ -6,11 +6,13 @@ import { toast } from 'ngx-sonner';
 import { TipService } from '@app/services/tip/tip';
 import { CategoryService } from '@app/services/category/category';
 import { FormTip } from '@app/shared/components/form-tip/form-tip';
+import { ConfirmDialog } from '@app/shared/components/confirm-dialog/confirm-dialog';
+import { LucideArrowLeft } from '@lucide/angular';
 import { TipUpdate } from '@api/index';
 
 @Component({
   selector: 'app-my-tip-edit',
-  imports: [FormTip],
+  imports: [FormTip, ConfirmDialog, LucideArrowLeft],
   templateUrl: './my-tip-edit.html',
 })
 export class MyTipEdit {
@@ -18,6 +20,7 @@ export class MyTipEdit {
   private tipService = inject(TipService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private readonly leaveDialog = viewChild.required(ConfirmDialog);
 
   private readonly id = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -27,6 +30,15 @@ export class MyTipEdit {
   );
   isLoading = signal(false);
   tipData = signal<TipUpdate | null>(null);
+
+  onCancel() {
+    this.leaveDialog().open();
+  }
+
+  confirmLeave() {
+    this.leaveDialog().close();
+    void this.router.navigate(['/dashboard/user/mis-tips']);
+  }
 
   constructor() {
     if (!Number.isInteger(this.id) || this.id <= 0) {

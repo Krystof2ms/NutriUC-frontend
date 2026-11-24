@@ -5,6 +5,16 @@
       [categories]="categories()"
       [isLoading]="isLoading()"
       (submitTip)="createTip($event)"
+      (cancelSubmit)="onCancel()"
     />
   </div>
+  <app-confirm-dialog
+    dialogId="confirm-leave-tip-create"
+    title="¿Salir sin guardar?"
+    description="Si sales ahora, perderás los datos del tip que ingresaste."
+    (confirmed)="confirmLeave()"
+  >
+    <svg dialog-icon lucideArrowLeft class="w-5" />
+    <span btn_ok>Salir sin guardar</span>
+  </app-confirm-dialog>
 </div>

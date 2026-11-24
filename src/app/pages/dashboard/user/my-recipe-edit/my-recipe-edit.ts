@@ -1,16 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoryService } from '@app/services/category/category';
 import { RecipeService } from '@app/services/recipe/recipe';
 import { ErrorClient } from '@app/shared/components/error-client/error-client';
 import { FormRecipe, type RecipeSubmit } from '@app/shared/components/form-recipe/form-recipe';
+import { ConfirmDialog } from '@app/shared/components/confirm-dialog/confirm-dialog';
 import { getChanges } from '@app/shared/utils/recipe.util';
 import { LucideArrowLeft } from '@lucide/angular';
 import { filter, firstValueFrom, map, switchMap } from 'rxjs';
 
 @Component({
-  imports: [RouterLink, FormRecipe, LucideArrowLeft, ErrorClient],
+  imports: [RouterLink, FormRecipe, LucideArrowLeft, ErrorClient, ConfirmDialog],
   selector: 'app-my-recipe-edit',
   templateUrl: './my-recipe-edit.html',
 })
@@ -19,6 +20,7 @@ export class MyRecipeEdit {
   private router = inject(Router);
   private recipeService = inject(RecipeService);
   private categoryService = inject(CategoryService);
+  private readonly leaveDialog = viewChild.required(ConfirmDialog);
 
   categories = toSignal(this.categoryService.getNames('recipe'), { initialValue: [] });
 
@@ -29,6 +31,15 @@ export class MyRecipeEdit {
       switchMap((id) => this.recipeService.getById(id)),
     ),
   );
+
+  onCancel() {
+    this.leaveDialog().open();
+  }
+
+  confirmLeave() {
+    this.leaveDialog().close();
+    void this.router.navigate(['..'], { relativeTo: this.route });
+  }
 
   async onSubmit(form: RecipeSubmit) {
     const recipe = this.recipe();
