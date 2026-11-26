@@ -135,6 +135,7 @@
       </div>
 
       <app-confirm-dialog
+        dialogId="confirm-delete"
         title="¿Eliminar esta receta?"
         [description]="'Esta acción es permanente. Se eliminará “' + data.name + '” de tus recetas.'"
         [busy]="deleting()"
