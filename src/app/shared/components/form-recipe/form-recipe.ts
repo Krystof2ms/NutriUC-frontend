@@ -131,10 +131,9 @@ export class FormRecipe {
 
   onCropCancel() {
     this.imageUrl.set(null);
-
-    if (!this.imageBlob()) {
-      this.fileInput().nativeElement.value = '';
-    }
+    // Discard the pending file even when a previously cropped image exists.
+    // imageBlob/imageResult keep that confirmed image intact.
+    this.fileInput().nativeElement.value = '';
   }
 
   onImageDelete() {
