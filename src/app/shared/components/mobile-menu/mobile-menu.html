@@ -1,0 +1,44 @@
+<div class="relative">
+  <button
+    type="button"
+    class="flex h-10 w-10 items-center justify-center rounded-lg text-primary hover:bg-primary-foreground/10"
+    (click)="toggle()"
+    [attr.aria-expanded]="open()"
+    aria-controls="mobile-header-menu"
+    [attr.aria-label]="open() ? 'Cerrar menú' : 'Abrir menú'"
+  >
+    @if (open()) {
+      <svg lucideX class="h-5 w-5" />
+    } @else {
+      <svg lucideMenu class="h-5 w-5" />
+    }
+  </button>
+
+  @if (open()) {
+    <div
+      id="mobile-header-menu"
+      class="absolute right-0 top-full z-50 mt-2 flex w-[min(20rem,calc(100vw-2rem))] flex-col gap-3 rounded-2xl border border-border bg-background p-3 shadow-xl"
+    >
+      <nav aria-label="Navegación principal">
+        <ul class="flex flex-col gap-1">
+          @for (link of links; track link.href) {
+            <li>
+              <a
+                [routerLink]="link.href"
+                routerLinkActive="bg-accent text-foreground"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="close()"
+                class="block rounded-lg px-4 py-3 text-sm font-medium text-foreground hover:bg-accent"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+      <div class="border-t border-border pt-2">
+        <app-theme-selector />
+      </div>
+    </div>
+  }
+</div>

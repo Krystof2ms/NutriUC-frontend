@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
+  host: { class: 'block h-full' },
   imports: [LucideX, LucideMenu, UserIcon, LucideLogOut, DashboardLink, ThemeSelector],
   selector: 'app-navbar-dashboard',
   templateUrl: './navbar-dashboard.html',
@@ -64,6 +65,14 @@ export class NavbarDashboard {
 
   toggleOpen() {
     this.open.set(!this.open());
+  }
+
+  closeMenu() {
+    this.open.set(false);
+  }
+
+  closeOnNavigation(event: MouseEvent) {
+    if ((event.target as HTMLElement).closest('a')) this.closeMenu();
   }
 
   async closeSession() {

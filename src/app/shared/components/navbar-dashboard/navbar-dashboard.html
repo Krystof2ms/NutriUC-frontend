@@ -1,5 +1,6 @@
 <button type="button" (click)="toggleOpen()"
-  class="md:hidden fixed top-4 left-4 z-50 p-2 bg-background rounded-md shadow">
+  class="md:hidden fixed top-3 left-3 z-60 p-2 bg-card rounded-md shadow"
+  [attr.aria-expanded]="open()" aria-label="Abrir o cerrar menú del panel">
   @if (open()) {
   <svg lucideX class="w-5" />
   } @else {
@@ -7,14 +8,19 @@
   }
 </button>
 
+@if (open()) {
+  <button type="button" class="md:hidden fixed inset-0 z-40 bg-black/40" aria-label="Cerrar menú"
+    (click)="toggleOpen()"></button>
+}
+
 <aside
-  [class]="`fixed top-0 left-0 z-50 h-full w-64 bg-sidebar-background border-r border-border transform transition-transform duration-200 ${open() ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static`">
+  [class]="`fixed inset-y-0 left-0 z-50 h-dvh w-72 max-w-[85vw] overflow-y-auto bg-sidebar-background border-r border-border transform transition-transform duration-200 ${open() ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static md:h-full md:w-64 md:max-w-none`">
   <div class="flex h-full flex-col pt-4">
     <div class="w-11/12 h-25 bg-primary self-center rounded-2xl flex flex-col items-center justify-center gap-2 mb-2">
       <app-user-icon class="w-10 h-10" [name]="user().name" [userId]="user().public_id" [has_image]="user().has_image" />
       <span class="text-secondary-foreground text-center">{{user().name}}</span>
     </div>
-    <nav class="flex-1 p-2 space-y-2" data-sveltekit-preload-data="tap" data-sveltekit-preload-code="hover">
+    <nav class="flex-1 p-2 space-y-2" data-sveltekit-preload-data="tap" data-sveltekit-preload-code="hover" (click)="closeOnNavigation($event)">
       <ol class="list-none flex flex-col gap-1">
         @for (link of links; track $index) {
         <app-dashboard-link [name]="link.name" [href]="link.href" [icon]="link.icon" [subLinks]="link.subLinks" [isRoot]="link.isRoot ?? false" />

@@ -1,13 +1,13 @@
-<div class="flex h-screen flex-col md:flex-row md:overflow-hidden">
+<div class="flex min-h-dvh flex-col md:h-dvh md:flex-row md:overflow-hidden">
   <app-sonner />
-  <div class="w-full flex-none md:w-64 h-14 md:h-full">
+  <div class="w-full flex-none md:w-64 md:h-full md:shrink-0">
     @if (currentUser(); as user) {
       <app-navbar-dashboard [user]="user"/>
     } @else {
       <p>No autenticado</p>
     }
   </div>
-  <div class="flex-1 md:overflow-y-auto md:p-12 bg-background">
+  <div class="min-w-0 flex-1 overflow-x-hidden bg-background p-4 pt-16 sm:p-6 sm:pt-16 md:overflow-y-auto md:p-8 lg:p-12">
     <router-outlet />
   </div>
 </div>
