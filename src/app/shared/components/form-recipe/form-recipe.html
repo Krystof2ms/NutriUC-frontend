@@ -63,9 +63,9 @@
 
       <div class="">
         <label class="mb-4 font-medium" for="image-recipe">Foto de Receta</label>
-        <div class="flex gap-8 items-center">
+        <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center">
           @if (imageResult(); as image) {
-            <img [src]="image" alt="Imagen seleccionada" class="w-50 rounded-md" />
+            <img [src]="image" alt="Imagen seleccionada" class="w-full max-w-50 rounded-md" />
           }
 
           <div class="flex flex-col w-fit">
@@ -120,7 +120,7 @@
 
     <fieldset formArrayName="instructions" class="mt-4">
       @for (field of form.ingredients; track field; let i = $index) {
-        <div class="grid grid-cols-[1fr_1fr_auto] mb-2 gap-3 items-end justify-center">
+        <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] mb-4 sm:mb-2 gap-3 items-end justify-center">
           <div class="field-group">
             <label [for]="'ingredient-name-' + i">Ingrediente</label>
             <input
