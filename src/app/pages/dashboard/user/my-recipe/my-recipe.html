@@ -13,9 +13,9 @@
         Volver a recetas
       </a>
 
-      <section class="flex justify-center gap-4 items-center">
-        <div>
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight">
+      <section class="flex flex-col sm:flex-row justify-between gap-6 items-center sm:items-start">
+        <div class="min-w-0 w-full text-center sm:text-left">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground leading-tight break-words">
             {{ data.name }}
           </h1>
 
@@ -59,7 +59,7 @@
               [src]="`${apiUrl}/recipes/recipe/${data.id}/img`"
               [alt]="data.name"
               sizes="140px"
-              class="rounded-2xl object-cover"
+            class="w-full h-full rounded-2xl object-cover"
               (error)="onImageError()"
             />
           </div>
@@ -68,7 +68,7 @@
 
       <div class="max-w-5xl mx-auto px-6 pt-12 grid lg:grid-cols-3 gap-10 md:gap-16">
         <section class="lg:col-span-1 min-w-0 grid place-items-center">
-          <div class="bg-card rounded-2xl card-shadow p-6 sticky top-24 inline-block">
+          <div class="w-full max-w-xl bg-card rounded-2xl card-shadow p-4 sm:p-6 lg:sticky lg:top-24">
             <h2 class="text-lg font-bold text-foreground mb-5 flex items-center gap-2">
               🧾 Ingredientes
             </h2>
@@ -95,12 +95,12 @@
           </div>
         </section>
 
-        <section class="lg:col-span-2 order-1 lg:order-2">
+        <section class="min-w-0 lg:col-span-2 order-1 lg:order-2">
           <h2 class="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
             👨‍🍳 Preparación
           </h2>
           <div
-            class="space-y-6 overflow-y-auto h-120 scrollbar-thumb-primary scrollbar-track-secondary-foreground"
+            class="space-y-6 lg:overflow-y-auto lg:max-h-120 scrollbar-thumb-primary scrollbar-track-secondary-foreground"
           >
             <ul class="list-upper-roman list-outside space-y-2 pl-6 list-disc">
               @for (instruction of data.instructions; track $index) {
@@ -118,16 +118,16 @@
         </section>
       </div>
 
-      <div class="w-fit sticky bottom-0 right-0 flex flex-col gap-2">
+      <div class="fixed bottom-6 right-6 z-40 flex flex-col gap-2">
         <button
-          class="p-4 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/60 hover:-translate-1 effect-clicked"
+          class="rounded-full p-4 bg-destructive text-destructive-foreground hover:bg-destructive/60 hover:-translate-1 effect-clicked"
           command="show-modal" commandfor="confirm-delete"
         >
           <svg class="w-6" lucideTrash />
         </button>
 
         <button
-          class="bg-primary text-primary-foreground p-4 rounded-full hover:bg-primary/60 transition hover:-translate-1 effect-clicked w-fit"
+          class="w-fit bg-primary text-primary-foreground p-4 rounded-full hover:bg-primary/60 transition hover:-translate-1 effect-clicked"
           (click)="onEdit()"
         >
           <svg class="w-6" lucidePencil />
